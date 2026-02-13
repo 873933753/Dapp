@@ -1,0 +1,39 @@
+export const featureList = [
+  {
+    name:'LaunchPad',
+    description:'Launch and participate in token sales',
+    href:'/launchPad',
+    icon:'🚀'
+  },
+  {
+    name:'Bridge',
+    description:'Transfer assets across chains',
+    href:'/bridge',
+    icon:'🌉'
+  },
+  {
+    name:'Swap',
+    description:'Exchange tokens instantly',
+    href:'/swap',
+    icon:'🔄'
+  },
+  {
+    name:'Pool',
+    description:'Add/Remove liquidity and earn LP tokens',
+    href:'/pool',
+    icon:'💎'
+  },
+  {
+    name:'Farm',
+    description:'Provide liquidity and farm rewards',
+    href:'/farm',
+    icon:'🌾'
+  },
+  {
+    name:'API Health',
+    description:'Check API status',
+    href:'/api/health',
+    icon:'❤️',
+    disNav:true
+  }
+]

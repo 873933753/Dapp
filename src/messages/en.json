@@ -4,5 +4,14 @@
  },
  "Wallet": {
   "button": "Collect Wallet"
- } 
+ },
+ "Home":{
+  "title":"Welcome to Hanber's DeFi DApp",
+  "LaunchPad":"Launch and participate in token sales",
+  "Bridge":"Transfer assets across chains",
+  "Swap":"Exchange tokens instantly",
+  "Pool":"Add/Remove liquidity and earn LP tokens",
+  "Farm":"Provide liquidity and farm rewards",
+  "API Health":"Check API status"
+ }
 }

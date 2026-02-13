@@ -9,7 +9,7 @@ import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
-import { wagmiConfig } from "@/libs/wagmiConfig";
+import { wagmiConfig } from "@/lib/wagmiConfig";
 import { mainnet } from 'viem/chains';
 import { useLocale  } from 'next-intl';
 // import { useLanguageStore } from '@/store/languageStore';

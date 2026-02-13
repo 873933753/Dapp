@@ -4,5 +4,14 @@
  },
  "Wallet": {
   "button": "连接钱包"
- }  
+ },
+ "Home":{
+  "title":"欢迎来到 hanber的 DeFi DApp",
+  "LaunchPad":"发行代币及参与代币销售",
+  "Bridge":"跨链转移资产",
+  "Swap":"立即兑换代币",
+  "Pool":"添加/移除流动性并赚取 LP 代币",
+  "Farm":"提供流动性并获得收益奖励",
+  "API Health":"检查 API 状态"
+ }
 }
