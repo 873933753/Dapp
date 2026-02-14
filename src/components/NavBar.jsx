@@ -2,6 +2,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import LocaleSwitcher from "./LocaleSwitcher"
 import { useTranslations } from "next-intl"
 import { featureList as navlist } from "@/config/list"
+import Link from "next/link"
 // import LanguageSwitcher from "./LanguageSwitcher"
 
 export default function NavBar(){
@@ -15,7 +16,15 @@ export default function NavBar(){
             <div className="hidden md:flex items-center">
               {
                 navlist.map(navItem => {
-                  return <span key={navItem.name} className={`mx-4 text-gray-500 text-sm cursor-pointer ${navItem.disNav?'hidden':''}`}>{navItem.name}</span>
+                  return (
+                    <Link
+                      href={navItem.href}
+                      key={navItem.name}
+                      className={`mx-4 text-gray-500 hover:text-gray-900 select-none text-sm cursor-pointer ${navItem.disNav?'hidden':''}`}
+                    >
+                      {navItem.name}
+                    </Link>
+                  )
                 })
               }
             </div>

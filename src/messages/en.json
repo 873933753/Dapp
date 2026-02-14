@@ -13,5 +13,8 @@
   "Pool":"Add/Remove liquidity and earn LP tokens",
   "Farm":"Provide liquidity and farm rewards",
   "API Health":"Check API status"
+ },
+ "Swap":{
+  "wallet":"Collect Wallet"
  }
 }
