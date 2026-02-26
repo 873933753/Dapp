@@ -13,6 +13,7 @@ import {
 import { TOKENS, getTokenAddress, getProtocolAddress } from "@/lib/constants";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { SWAP_ABI } from "@/lib/abis";
 
   const handleInputChange = (e) => {
     let inputValue = e.target.value;
@@ -265,18 +266,18 @@ export default function SwapPage(){
           </div>
         </div>
         {
-          
+          amountOut && 
+          <PriceInfo
+            tokenIn={tokenIn}
+            tokenOut = {tokenOut} 
+            amountIn={amountIn}
+            amountOut={amountOut}
+            reserves = {[0,1]}
+            priceImpact={0}
+            slippage={slippage}
+            minAmountOut={0}
+          />
         }
-        <PriceInfo
-          tokenIn={tokenIn}
-          tokenOut = {tokenOut} 
-          amountIn={amountIn}
-          amountOut={amountOut}
-          reserves = {[0,1]}
-          priceImpact={0}
-          slippage={slippage}
-          minAmountOut={0}
-        />
         {
           isConnected ? (
             <button className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 hover:text-blue-600 hover:bg-blue-200 cursor-pointer">

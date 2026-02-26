@@ -19,6 +19,7 @@ export default function Home() {
                 icon = {item.icon}
                 name = { item.name }
                 desc = {t(item.name)}
+                href={ item.href }
               />
             )
           })
@@ -28,15 +29,17 @@ export default function Home() {
   );
 }
 
-function FeatureItem({icon,name,desc}){
+function FeatureItem({icon,name,desc,href}){
   return(
     /* 父元素加group，子元素用group-hover监听状态 */
-    <div className="group cursor-pointer p-6 border rounded-lg hover:shadow-lg hover:border-primary">
+    <a 
+      href={href}
+      className="group cursor-pointer p-6 border rounded-lg hover:shadow-lg hover:border-primary">
       <div className="group-hover:text-sky-500 flex flex-col gap-2">
         <div className="text-4xl mb-2">{icon}</div>
         <h3 className="font-bold text-xl">{name}</h3>
         <p className="text-gray-400">{desc}</p>
       </div>
-    </div>
+    </a>
   )
 }
