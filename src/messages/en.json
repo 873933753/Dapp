@@ -15,6 +15,13 @@
   "API Health":"Check API status"
  },
  "Swap":{
-  "wallet":"Collect Wallet"
+  "wallet":"Collect Wallet",
+  "info":{
+    "title":"How it works",
+    "first":"Select tokens to swap",
+    "second":"Enter amount and get instant quote",
+    "third":" Approve token spending (one-time)",
+    "last":"Confirm swap transaction"
+  }
  }
 }

@@ -1,7 +1,7 @@
 'use client'
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useTranslations } from "next-intl"
-import { useAccount, useChainId, useReadContract } from "wagmi";
+import { useAccount, useChainId, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import {
   Select,
   SelectContent,
@@ -11,9 +11,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { TOKENS, getTokenAddress, getProtocolAddress } from "@/lib/constants";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { SWAP_ABI } from "@/lib/abis";
+import { ERC20_ABI, SWAP_ABI } from "@/lib/abis";
+import { formatUnits, parseUnits } from "viem";
 
   const handleInputChange = (e) => {
     let inputValue = e.target.value;
@@ -108,13 +109,20 @@ export default function SwapPage(){
   const [ amountIn, setAmountIn ] = useState('0')
   const [ amountOut, setAmountOut ] = useState('0')
   const chainId = useChainId()
+  // DRT 和 USDC合约未部署，所以用的是mock数据
+  const [ isMockMode, setIsMockMode ] = useState(false)
 
   const slippagePresets = [0.1, 0.5, 1.0]
-  const [ slippage, setSlippage ] = useState(slippagePresets[1])
+  const [ slippage, setSlippage ] = useState(slippagePresets[1]) // 滑点默认0.5%
 
   const tokenInData = {
-    ...TOKENS[chainId],
+    ...TOKENS[tokenIn],
+    //tokenIn的代币合约地址
     address:getTokenAddress(chainId,tokenIn)
+  }
+  const tokenOutData = {
+    ...TOKENS[tokenOut],
+    address:getTokenAddress(chainId,tokenOut)
   }
 
   const handleSwitchIn = (sympol) => {
@@ -141,23 +149,98 @@ export default function SwapPage(){
     setAmountOut(newValue)
   }
 
-  const handleSwapTokens = () => {
+  const switchTokens = () => {
     const tokenA = tokenIn
     const tokenB = tokenOut
     setTokenIn(tokenB)
     setTokenOut(tokenA)
+    // 不仅币种需要交换，数值也需要交换，amountOut请求合约得出
+    setAmountIn(amountOut)
+    setAmountOut('')
   }
+
+  // minAmountOut-- amount*(1-slippage/100)
+  // const minAmountOut = amountOut ? (parseFloat(amountOut) * (1 - slippage / 100)).toFixed(6) : '0'
+  const minAmountOut = useMemo(() => {
+    // 1. 边界值强校验：空值/非数字直接返回 '0'
+    if (!amountOut || isNaN(parseFloat(amountOut)) || parseFloat(amountOut) <= 0) {
+      return '0.000000'; // 统一返回6位小数，避免格式不一致
+    }
+
+    // 2. 滑点参数校验：防止负数/超大滑点导致异常
+    const slippageNum = Number(slippage);
+    const validSlippage = isNaN(slippageNum) || slippageNum < 0 || slippageNum > 100 
+      ? 0 // 滑点异常时默认0
+      : slippageNum;
+
+    // 3. 高精度计算：避免 parseFloat 精度丢失（可选进阶优化）
+    const amountOutNum = parseFloat(amountOut);
+    const minAmount = amountOutNum * (1 - validSlippage / 100);
+
+    // 4. 格式化：强制保留6位小数，且处理极小值（避免 0.0000001 显示为 0.000000）
+    return minAmount <= 0 
+      ? '0.000000' 
+      : minAmount.toFixed(6);
+  },[amountOut, slippage])
 
   /* 合约地址 */
   const swapAddress = getProtocolAddress(chainId, 'SWAP')
 
-  // Read reserves from chain - 获取reserves
+  // Read reserves from chain - 获取reserves,用于计算流动性
   const { data: reserves } = useReadContract({
     address: swapAddress,
     abi: SWAP_ABI,
-    functionName: 'getReserves'
+    functionName: 'getReserves',
+    enabled: Boolean(swapAddress)
   })
-  console.log('reserves---',reserves)
+
+  // 读合约获取getAmountOut
+  const { data: chainQuote, isError: isQuoteError } = useReadContract({
+    address: swapAddress,
+    abi: SWAP_ABI,
+    functionName: 'getAmountOut',
+    args: amountIn && tokenInData ? [ tokenInData.address, parseUnits(amountIn, tokenInData.decimals)] : undefined,
+    // 合约地址有效 && amountIn有输入 && 输入金额是大于 0 的有效数字 才读取合约--避免无效请求，减少不必要的链上交互，降低前端资源消耗
+    enabled: Boolean(swapAddress && amountIn && parseFloat(amountIn) > 0)
+  })
+
+  //授权成功回调函数
+  const handleApproved = () => {
+    console.log('Token approved, ready to swap')
+  }
+
+  useEffect(() => {
+    const getQuote = async () => {
+      //没有输入或输入不合法
+      if (!amountIn || parseFloat(amountIn) <= 0 || !tokenOut) {
+        setAmountOut('')
+        return
+      }
+
+      // 若链上有数据返回，DRT 和USDC 用的是mock数据
+      if(chainQuote && !isQuoteError) {
+        setAmountOut(formatUnits(chainQuote,tokenOutData.decimals))
+        setIsMockMode(false)
+        return
+      }
+      setIsMockMode(true)
+    }
+
+    const timer = setTimeout(getQuote, 500) // Debounce - 防抖
+    return () => clearTimeout(timer)
+  },[chainQuote, isQuoteError,amountIn, tokenOut, tokenOutData])
+  
+  /* 计算值 */
+  // 计算价格影响
+  const priceImpact = useMemo(() => {
+    if(!reserves || !amountIn){
+      return
+    }
+    const reserveValue = Number(reserves[tokenIn === 'TKA' ? 0 : 1])
+    const amountInNum = parseFloat(amountIn)
+    const impact = ((amountInNum / (reserveValue/1e18)) * 100).toFixed(2)
+    return impact
+  },[reserves,amountIn,tokenIn])
 
 
 
@@ -217,7 +300,7 @@ export default function SwapPage(){
           {/* 翻转token */}
           <button
             className="bg-white cursor-pointer border-4 border-gray-100 rounded-xl p-2 hover:bg-gray-50 transition-colors absolute left-1/2 -translate-x-1/2 z-10" 
-            onClick={handleSwapTokens}
+            onClick={switchTokens}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
@@ -231,14 +314,15 @@ export default function SwapPage(){
           </div>
           <div className="flex justify-between items-center mt-4">
             <input
-              disabled={!tokenOut}
+              // disabled={!tokenOut}
+              disabled={true}
               type="number"
               placeholder="0"
               className="text-2xl font-bold outline-none bg-transparent w-full"
               onChange={(e) => handleAmountOut(e)}
               onKeyDown={handleKeyDown}
               onPaste={handlePaste}
-              value={amountOut}
+              value={ amountOut }
             />
             <div className={`border px-0 rounded-2xl ml-4 ${!tokenOut?'bg-blue-500 border-blue-500':''}`}>
               <Select onValueChange={handleSwitchOut} value={tokenOut} className='bg-blue-500'>
@@ -251,7 +335,8 @@ export default function SwapPage(){
                 <SelectContent>
                   <SelectGroup>
                     {
-                      Object.keys(TOKENS).map(symbol => {
+                      /* 过滤tokenIn，使得两个币种不一样 */
+                      Object.keys(TOKENS).filter(s => s !== tokenIn).map(symbol => {
                         return(
                           <SelectItem key={symbol} value={symbol}>
                             {symbol}
@@ -266,28 +351,50 @@ export default function SwapPage(){
           </div>
         </div>
         {
-          amountOut && 
+          amountOut!=0 && 
           <PriceInfo
             tokenIn={tokenIn}
             tokenOut = {tokenOut} 
             amountIn={amountIn}
             amountOut={amountOut}
-            reserves = {[0,1]}
-            priceImpact={0}
+            reserves = {reserves}
+            priceImpact={priceImpact}
             slippage={slippage}
-            minAmountOut={0}
+            minAmountOut={minAmountOut}
           />
         }
         {
-          isConnected ? (
+          !isConnected ? (
+            <CustomConnectBtn></CustomConnectBtn>
+          ) : isMockMode ? (
             <button className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 hover:text-blue-600 hover:bg-blue-200 cursor-pointer">
-              添加资金以进行交换
+              Swap (Mock Mode - Contract Not Deployed)
             </button>
           ) : (
-            <CustomConnectBtn></CustomConnectBtn>
+            // <button className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 hover:text-blue-600 hover:bg-blue-200 cursor-pointer">
+            //   添加资金以进行交换
+            // </button>
+            <ApproveButton
+              tokenAddress= {tokenInData?.address}
+              spenderAddress = {swapAddress}
+              amountIn = {amountIn ? parseUnits(amountIn,tokenInData.decimals) : 0n}
+              amountOut = {amountOut}
+              onApproved = { handleApproved}
+              tokenInData = {tokenInData}
+              swapAddress = { swapAddress }
+            >
+              {/* <button
+                disabled={!amountIn || !amountOut}
+                className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white"
+              >
+                {'Swap'}
+              </button> */}
+            </ApproveButton>
           )
         }
-      </div>      
+      </div>
+      {/* Info Section */}      
+      <InfoSection />
     </div>
   )
 }
@@ -310,7 +417,8 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
               {/* 流动性：(reserves[0] + reserves[1])/1e18 * 1.5 */}
               <span className="text-gray-600">Liquidity</span>
               <span className="font-semibold">
-                ${((Number(reserves[0]) + Number(reserves[1])) / 1e18 * 1.5).toFixed(2)}
+                {/* ${((Number(reserves[0]) + Number(reserves[1])) / 1e18 * 1.5).toFixed(2)} */}
+                {calculateLiquidity(reserves[0],reserves[1],18)} LP
               </span>
             </div>
             <div className="flex justify-between text-sm">
@@ -340,4 +448,216 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
       )}
     </div>
   )
+}
+
+/* 代币使用授权(当前钱包向合约授权)
+1）前端检测授权状态 - 调用ERC20代币合约的allowance检查用户地址是否授权该地址使用代币以及额度是否够用,allowanceAmount<amountIn 出发授权流程（如果alloance>amountIn不用授权合约可以直接划走）
+2）发起授权，调用ERC20代币合约的approce方法，发起链上交易
+*/
+function ApproveButton({
+  tokenAddress,
+  spenderAddress,
+  amountIn,
+  amountOut,
+  onApproved,
+  tokenInData,
+  swapAddress
+}){
+  const { address: ownerAddress } = useAccount()
+  //判断是否需要授权
+  const [needsApproval, setNeedsApproval] = useState(false)
+
+  // 获取余额
+  const { data: allowance, refetch: refetchAllowance} = useReadContract({
+    address: tokenAddress, // 代币合约地址
+    abi: ERC20_ABI,
+    functionName: 'allowance',
+    args: ownerAddress && spenderAddress ? [ ownerAddress, spenderAddress ] : undefined, // 参数：授权人地址、被授权合约地址
+    enabled: Boolean(ownerAddress && spenderAddress && tokenAddress && amountIn)
+  })
+
+
+  /* approve  transaction*/
+  const { data: writeHash, writeContract: approve, isPending : isApproving } = useWriteContract()
+  //授权状态
+  const { isLoading: isConfirming, isSuccess: isApproved } = useWaitForTransactionReceipt({
+    hash : writeHash
+  })
+
+  // 发起授权
+  const handleApprove = () => {
+    if(!tokenAddress || !spenderAddress || !amountIn || !amountOut){
+      return
+    }
+    approve({ 
+      address:tokenAddress,
+      abi:ERC20_ABI,
+      functionName:'approve',
+      args:[ spenderAddress, amountIn]
+    })
+  }
+
+  const { data: swapHash, writeContract: swap, isPending: isSwaping } = useWriteContract()
+  const { isLoading: isSwapConfirming, isSuccess: isSwapSuccess } = useWaitForTransactionReceipt({
+    hash:swapHash
+  })
+  //发起swap
+  const handleSwap = async() => {
+    if(!amountIn || !amountOut || !swapAddress){
+      return
+    }
+    
+    try {
+      swap({
+        address: swapAddress,
+        abi: SWAP_ABI,
+        functionName: 'swap',
+        args: [tokenAddress, amountIn], // 确保 args 必传且合法
+        // gasLimit: 300000n, // 安全上限：30万 gas（swap 足够用）
+        enabled: Boolean(amountIn && tokenAddress)
+      });
+      console.log('tokenAddress--',tokenAddress)
+      console.log('amountIn',amountIn)
+    } catch (err) {
+      console.error('Swap 交易失败详情：', err);
+    }
+    // swap({
+    //   address:swapAddress,
+    //   abi:SWAP_ABI,
+    //   functionName:'swap',
+    //   args: amountIn && amountOut && tokenAddress ? [ tokenAddress, amountIn ] : undefined,
+    //   enabled: Boolean(amountIn && tokenAddress)
+    // })
+  }
+
+  useEffect(() => {
+    //如果金额还未输入，授权额度也未读取，还不用授权
+    if(amountIn === undefined || amountIn === null || allowance === undefined || allowance === null){
+      setNeedsApproval(false)
+      return
+    }
+    const amountBig = typeof amountIn === 'bigint' ? amountIn : BigInt(amountIn || 0)
+    const allowanceBig = BigInt(allowance)
+    // allowanceBig < amountBig 需要发起授权,否则无须发起授权
+    setNeedsApproval(allowanceBig < amountBig)
+  },[amountIn,allowance])
+  
+  //如果不需要授权，则可以swap
+  // if(!needsApproval){
+  //   return children
+  // }
+
+  // 授权成功
+  useEffect(() => {
+    if(isApproved){
+      refetchAllowance() // 重新获取授权额度，用于展示
+      // 执行一个可选的回调函数（onApproved），通知外部“授权已完成”
+      onApproved?.()
+    }
+  },[isApproved, onApproved, refetchAllowance])
+
+  return(
+    <>
+      {
+        needsApproval && amountOut ? (
+          <button 
+            disabled = { !amountIn || !amountOut || isApproving || isConfirming}
+            onClick = { handleApprove }
+            className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white">
+            { (isApproving || isConfirming) ? "Approving..." : "Approve Token"}
+          </button>
+        ):(
+          <button
+            disabled={!amountIn || !amountOut || isSwapConfirming || isSwaping}
+            onClick={ handleSwap }
+            className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white"
+          >
+            { isSwaping || isSwapConfirming ? 'Swaping...':'Swap' }
+          </button>
+        )
+      }
+      {/* Success Message */}
+      {isSwapSuccess && (
+        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-green-800 font-semibold">Swap Successful!</p>
+          <a
+            href={`https://sepolia.etherscan.io/tx/${swapHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-blue-600 hover:underline"
+          >
+            View on Etherscan →
+          </a>
+        </div>
+      )}
+    </>
+  )
+}
+
+/* Info Section */
+function InfoSection(){
+  const t = useTranslations('Swap')
+  return(
+    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+      <h3 className="font-semibold mb-2">{t('info.title')}</h3>
+      <ul className="text-sm text-gray-600 space-y-1">
+        <li>• {t('info.first')}</li>
+        <li>• {t('info.second')}</li>
+        <li>• {t('info.third')}</li>
+        <li>• {t('info.last')}</li>
+      </ul>
+    </div>
+  )
+}
+
+
+function bigIntSqrt(n) {
+  // 边界值处理：0或1的平方根就是自身
+  if (n < 0n) throw new Error('流动性计算错误：储备量乘积不能为负数');
+  if (n === 0n || n === 1n) return n;
+
+  // 二分法求解（BigInt 运算，全程无精度丢失）
+  let low = 1n;
+  let high = n;
+  let result = 0n;
+
+  while (low <= high) {
+    const mid = (low + high) / 2n; // BigInt 整数除法
+    const midSquared = mid * mid;  // 计算中间值的平方
+
+    if (midSquared === n) {
+      // 刚好是完全平方数，直接返回
+      return mid;
+    } else if (midSquared < n) {
+      // 中间值平方小于目标值，记录当前值并往更大方向找
+      result = mid;
+      low = mid + 1n;
+    } else {
+      // 中间值平方大于目标值，往更小方向找
+      high = mid - 1n;
+    }
+  }
+
+  // 返回最接近的向下取整结果（满足LP计算精度要求）
+  return result;
+}
+
+
+function calculateLiquidity(reserveA, reserveB, decimals) {
+  // 1. 校验储备量不为0（无流动性时返回0）
+  if (reserveA === 0n || reserveB === 0n) return '0.00';
+
+  // 2. 计算两种代币储备量的乘积（BigInt 运算）
+  const reserveProduct = reserveA * reserveB;
+
+  // 3. 计算平方根（用手写的bigIntSqrt，无依赖）
+  const liquidityRaw = bigIntSqrt(reserveProduct);
+
+  // 4. 把BigInt类型的LP原始值转为人类可读数值（纯原生JS处理精度）
+  // 原理：10^decimals 是精度系数，比如 18位精度 → 1e18
+  const precision = BigInt(10 ** decimals);
+  const liquidityHumanNum = Number(liquidityRaw) / Number(precision);
+
+  // 5. 格式化保留2位小数（前端展示用）
+  return liquidityHumanNum.toFixed(2);
 }
