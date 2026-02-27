@@ -1,7 +1,7 @@
 'use client'
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useTranslations } from "next-intl"
-import { useAccount, useChainId, useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
+import { useAccount, useChainId, useReadContract, useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi";
 import {
   Select,
   SelectContent,
@@ -103,7 +103,7 @@ function CustomConnectBtn() {
 
 export default function SwapPage(){
   const t = useTranslations('Swap')
-  const { isConnected } = useAccount()
+  const { address:myAddress,isConnected } = useAccount()
   const [ tokenIn, setTokenIn ] = useState('TKA')
   const [ tokenOut, setTokenOut ] = useState('')
   const [ amountIn, setAmountIn ] = useState('0')
@@ -141,7 +141,12 @@ export default function SwapPage(){
   }
 
   const handleAmountIn = (e) => {
-    const newValue = handleInputChange(e)
+    let newValue = handleInputChange(e)
+    // 超过余额
+    if(parseUnits(newValue,tokenInData.decimals) > tokenBalance){
+      alert('余额不足')
+      newValue = formatUnits(tokenBalance,tokenInData.decimals)
+    }
     setAmountIn(newValue)
   }
 
@@ -205,6 +210,14 @@ export default function SwapPage(){
     enabled: Boolean(swapAddress && amountIn && parseFloat(amountIn) > 0)
   })
 
+  //获取余额
+  const { data:tokenBalance,refetch: tokenBalanceRefetch } = useReadContract({
+    address: tokenInData.address, // 代币合约地址
+    abi: ERC20_ABI,
+    functionName:'balanceOf',
+    args:myAddress && tokenInData?.address ? [myAddress] : undefined
+  })
+
   //授权成功回调函数
   const handleApproved = () => {
     console.log('Token approved, ready to swap')
@@ -244,6 +257,19 @@ export default function SwapPage(){
   },[reserves,amountIn,tokenIn])
 
 
+  //刷新余额
+  useEffect(() => {
+    tokenBalanceRefetch()
+  },[tokenBalance,tokenInData])
+
+  // swap成功得回调
+  const handleSwapSuccess = () => {
+    //刷新余额
+    tokenBalanceRefetch()
+    setAmountIn(0)
+    setAmountOut(0)
+  }
+
 
   return(
     <div className="container max-w-lg mx-auto py-6 md:py-12 px-4">
@@ -264,7 +290,14 @@ export default function SwapPage(){
         <div className={`rounded-2xl px-4 py-6 mt-6 relative ${!tokenIn?'bg-gray-200':'bg-white'}`}>
           <div className="flex justify-between text-l">
             <span>Sell</span>
-            {/* <span>xxxx</span> */}
+            {
+              tokenIn && (
+                <span className="text-blue-600">
+                  balance: { tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
+                </span>
+              )
+            }
+            
           </div>
           <div className={`flex justify-between items-center mt-4`}>
             <input
@@ -386,6 +419,8 @@ export default function SwapPage(){
               onApproved = { handleApproved}
               tokenInData = {tokenInData}
               swapAddress = { swapAddress }
+              myAddress = {myAddress}
+              onSwapSuccess={handleSwapSuccess}
             >
               {/* <button
                 disabled={!amountIn || !amountOut}
@@ -476,7 +511,9 @@ function ApproveButton({
   amountOut,
   onApproved,
   tokenInData,
-  swapAddress
+  swapAddress,
+  myAddress,
+  onSwapSuccess
 }){
   const { address: ownerAddress } = useAccount()
   //判断是否需要授权
@@ -516,33 +553,34 @@ function ApproveButton({
   const { isLoading: isSwapConfirming, isSuccess: isSwapSuccess } = useWaitForTransactionReceipt({
     hash:swapHash
   })
+
+  // 监听交易成功
+  useEffect(() => {
+    if (isSwapSuccess) {
+      onSwapSuccess() // 通知父组件刷新
+    }
+  }, [isSwapSuccess, onSwapSuccess])
+  
   //发起swap
   const handleSwap = async() => {
     if(!amountIn || !amountOut || !swapAddress){
       return
-    }
-    
+    }   
     try {
       swap({
         address: swapAddress,
         abi: SWAP_ABI,
         functionName: 'swap',
         args: [tokenAddress, amountIn], // 确保 args 必传且合法
-        // gasLimit: 300000n, // 安全上限：30万 gas（swap 足够用）
         enabled: Boolean(amountIn && tokenAddress)
+      },{
+        onError:(err) => {
+          console.log('err--',err)
+        }
       });
-      console.log('tokenAddress--',tokenAddress)
-      console.log('amountIn',amountIn)
     } catch (err) {
       console.error('Swap 交易失败详情：', err);
     }
-    // swap({
-    //   address:swapAddress,
-    //   abi:SWAP_ABI,
-    //   functionName:'swap',
-    //   args: amountIn && amountOut && tokenAddress ? [ tokenAddress, amountIn ] : undefined,
-    //   enabled: Boolean(amountIn && tokenAddress)
-    // })
   }
 
   useEffect(() => {
