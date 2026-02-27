@@ -52,8 +52,12 @@ export default function PoolPage(){
     ],
   })
 
-  /* 获取 */
-
+  /* 更新pool */
+  const [refreshTrigger, setRefreshTrigger] = useState(0)
+  const updatePool = () => {
+    // 改变 refreshTrigger 触发子组件重新获取
+    setRefreshTrigger(prev => prev + 1)
+  }
 
   return(
     <div className="container max-w-2xl mx-auto py-12">
@@ -67,6 +71,7 @@ export default function PoolPage(){
       <PoolDash
         chainId={chainId}
         swapAddress={swapAddress}
+        refreshTrigger={refreshTrigger}  // 传下去
       />
 
       {/* Main Card */}
@@ -75,9 +80,9 @@ export default function PoolPage(){
         <div className="flex gap-2 mb-6">
           <button
             onClick={() => setMode('add')}
-            className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
+            className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors cursor-pointer ${
               mode === 'add'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-blue-100 text-blue-500'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -85,9 +90,9 @@ export default function PoolPage(){
           </button>
           <button
             onClick={() => setMode('remove')}
-            className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
+            className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors cursor-pointer ${
               mode === 'remove'
-                ? 'bg-blue-600 text-white'
+                ? 'bg-blue-100 text-blue-500'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
@@ -103,6 +108,8 @@ export default function PoolPage(){
             isConnected = {isConnected}
             balanceData = { balanceData }
             swapAddress = { swapAddress }
+            address = { address }
+            updatePool = {updatePool}
           />
         )}
 
