@@ -1,5 +1,60 @@
+'use client'
+import { ERC20_ABI, SWAP_ABI } from "@/lib/abis"
+import { getProtocolAddress, getTokenAddress } from "@/lib/constants"
+import { useEffect, useState } from "react"
+import { formatUnits } from "viem"
+import { useAccount , useChainId, useReadContract, useReadContracts } from "wagmi"
+import AddForm from "./components/AddForm"
+import RemoveForm from "./components/RemoveForm"
+import PoolDash from "./components/PoolDash"
+
 export default function PoolPage(){
-  const mode = 'add'
+  const chainId = useChainId()
+  const swapAddress = getProtocolAddress(chainId, 'SWAP')
+  const { address, isConnected } = useAccount()
+  
+  const [mode, setMode] = useState('add')
+  
+  /* 获取两种币种的余额 */
+  /* const { data: tokenBalanceA, refetch: tokenBalanceARefetch } = useReadContract({
+    address: getTokenAddress(chainId,'TKA'),
+    abi: ERC20_ABI,
+    functionName:'balanceOf',
+    args: address ? [address] :undefined,
+    enabled: Boolean(address)
+  })
+
+  const { data: tokenBalanceB, refetch: tokenBalanceBRefetch } = useReadContract({
+    address: getTokenAddress(chainId,'TKB'),
+    abi: ERC20_ABI,
+    functionName:'balanceOf',
+    args: address ? [address] :undefined,
+    enabled: Boolean(address)
+  }) */
+  
+  /* 同时读取多个合约 */
+  const { data:balanceData, refetch: refetchBalances } = useReadContracts({
+    contracts: [
+      {
+        address: getTokenAddress(chainId,'TKA'), // 合约 TKA 地址
+        abi: ERC20_ABI,
+        functionName: 'balanceOf',
+        args: address ? [address] :undefined,
+        enabled: Boolean(address)
+      },
+      {
+        address: getTokenAddress(chainId,'TKB'), // 合约 TKB 地址
+        abi: ERC20_ABI,
+        functionName: 'balanceOf',
+        args: address ? [address] :undefined,
+        enabled: Boolean(address)
+      },
+    ],
+  })
+
+  /* 获取 */
+
+
   return(
     <div className="container max-w-2xl mx-auto py-12">
       {/* Header */}
@@ -9,34 +64,17 @@ export default function PoolPage(){
       </div>
 
       {/* Pool Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="text-sm opacity-90 mb-1">Total TVL</div>
-          <div className="text-2xl font-bold">
-            xxx
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="text-sm opacity-90 mb-1">Reserve A</div>
-          <div className="text-2xl font-bold">
-            
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-          <div className="text-sm opacity-90 mb-1">Reserve B</div>
-          <div className="text-2xl font-bold">
-             TKB
-          </div>
-        </div>
-      </div>
+      <PoolDash
+        chainId={chainId}
+        swapAddress={swapAddress}
+      />
 
       {/* Main Card */}
       <div className="bg-white rounded-2xl shadow-lg p-6">
         {/* Mode Selector */}
         <div className="flex gap-2 mb-6">
           <button
+            onClick={() => setMode('add')}
             className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
               mode === 'add'
                 ? 'bg-blue-600 text-white'
@@ -46,6 +84,7 @@ export default function PoolPage(){
             Add Liquidity
           </button>
           <button
+            onClick={() => setMode('remove')}
             className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
               mode === 'remove'
                 ? 'bg-blue-600 text-white'
@@ -59,69 +98,17 @@ export default function PoolPage(){
 
         {/* Add Liquidity Mode */}
         {mode === 'add' && (
-          <>
-            {/* Token A Input */}
-            <div className="mb-4">
-              <div className="bg-gray-50 rounded-xl p-4">
-                <div className="flex justify-between mb-2">
-                  <label className="text-sm text-gray-600">Token A</label>
-                  <button className="text-sm text-blue-600">
-                    Balance: 
-                  </button>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="number"
-                    value={0}
-                    placeholder="0.0"
-                    className="flex-1 text-2xl font-semibold bg-transparent outline-none"
-                  />
-                  <div className="bg-white border rounded-lg px-3 py-2 font-semibold">
-                    TKA
-                  </div>
-                </div>
-              </div>
-            </div>
+          <AddForm
+            chainId = { chainId }
+            isConnected = {isConnected}
+            balanceData = { balanceData }
+            swapAddress = { swapAddress }
+          />
+        )}
 
-            {/* Plus Icon */}
-            <div className="flex justify-center -my-2 relative z-10">
-              <div className="bg-white border-4 border-gray-50 rounded-xl p-2">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Token B Input */}
-            <div className="mb-6">
-              <div className="bg-gray-50 rounded-xl p-4">
-                <div className="flex justify-between mb-2">
-                  <label className="text-sm text-gray-600">Token B</label>
-                  <button className="text-sm text-blue-600">
-                    Balance: 
-                  </button>
-                </div>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="number"
-                    value={0}
-                    placeholder="0.0"
-                    className="flex-1 text-2xl font-semibold bg-transparent outline-none"
-                  />
-                  <div className="bg-white border rounded-lg px-3 py-2 font-semibold">
-                    TKB
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Price Info */}
-            
-
-            {/* Action Button - Add Liquidity with Dual Approval */}
-
-            {/* Success Message */}
-          </>
+        {/* Remove Liquidity Mode */}
+        {mode === 'remove' && (
+          <RemoveForm />
         )}
 
       </div>
