@@ -114,6 +114,7 @@ export default function SwapPage(){
 
   const slippagePresets = [0.1, 0.5, 1.0]
   const [ slippage, setSlippage ] = useState(slippagePresets[1]) // 滑点默认0.5%
+  const [ showSlippageModal, setShowSlippageModal] = useState(false)
 
   const tokenInData = {
     ...TOKENS[tokenIn],
@@ -249,7 +250,10 @@ export default function SwapPage(){
       <div className="shadow-lg rounded-xl p-6 bg-gray-50">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-2xl">Swap</h2>
-          <button className="p-2 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer group">
+          <button 
+            onClick={() => setShowSlippageModal(true)}
+            className="p-2 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer group"
+          >
             <svg className="w-5 h-5 text-gray-600 group-hover:rotate-45 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -260,7 +264,7 @@ export default function SwapPage(){
         <div className={`rounded-2xl px-4 py-6 mt-6 relative ${!tokenIn?'bg-gray-200':'bg-white'}`}>
           <div className="flex justify-between text-l">
             <span>Sell</span>
-            <span>xxxx</span>
+            {/* <span>xxxx</span> */}
           </div>
           <div className={`flex justify-between items-center mt-4`}>
             <input
@@ -395,6 +399,17 @@ export default function SwapPage(){
       </div>
       {/* Info Section */}      
       <InfoSection />
+      {/* slippage */}
+      {
+        showSlippageModal && (
+          <SlippageModal
+            slippagePresets={slippagePresets}
+            setShowSlippageModal={setShowSlippageModal}
+            setSlippage={setSlippage}
+            slippage={slippage}
+          />
+        )
+      }
     </div>
   )
 }
@@ -606,6 +621,99 @@ function InfoSection(){
         <li>• {t('info.third')}</li>
         <li>• {t('info.last')}</li>
       </ul>
+    </div>
+  )
+}
+
+/* slippageModal */
+function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippage}){
+  const [customSlippage, setCustomSlippage] = useState('')
+  const handleCustomSlippage = (value) => {
+    setCustomSlippage(value)
+    const numValue = parseFloat(value)
+    if (!isNaN(numValue) && numValue >= 0 && numValue <= 50) {
+      setSlippage(numValue)
+    }
+  }
+
+  const handleSlippagePreset = (value) => {
+    setSlippage(value)
+    setCustomSlippage('')
+  }
+  return(
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-xl font-bold">Settings</h2>
+          <button
+            onClick={() => setShowSlippageModal(false)}
+            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-semibold mb-3">Slippage Tolerance</label>
+            <div className="flex gap-2 mb-3">
+              {slippagePresets.map((preset) => (
+                <button
+                  key={preset}
+                  onClick={() => handleSlippagePreset(preset)}
+                  className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
+                    slippage === preset && !customSlippage
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {preset}%
+                </button>
+              ))}
+            </div>
+            <div className="relative">
+              <input
+                type="number"
+                value={customSlippage}
+                onChange={(e) => handleCustomSlippage(e.target.value)}
+                placeholder="Custom"
+                step="0.1"
+                min="0"
+                max={50}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-8"
+              />
+              <span className="absolute right-3 top-2 text-gray-500">%</span>
+            </div>
+            {customSlippage && parseFloat(customSlippage) > 5 && (
+              <p className="mt-2 text-sm text-yellow-600">⚠️ High slippage may result in unfavorable rates</p>
+            )}
+            {customSlippage && parseFloat(customSlippage) > 15 && (
+              <p className="mt-2 text-sm text-red-600">⚠️ Very high slippage! You may lose significant value.</p>
+            )}
+          </div>
+
+          <div className="pt-4 border-t">
+            <div className="bg-blue-50 rounded-lg p-3">
+              <p className="text-sm text-gray-700">
+                <strong>What is slippage?</strong>
+              </p>
+              <p className="text-xs text-gray-600 mt-1">
+                Slippage is the difference between expected and actual trade price.
+                Your transaction will revert if the price changes unfavorably by more than this percentage.
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setShowSlippageModal(false)}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
+          >
+            Done
+          </button>
+        </div>
+      </div>
     </div>
   )
 }
