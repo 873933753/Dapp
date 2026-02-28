@@ -86,3 +86,50 @@ export function debounce(
   
   return debounced
 }
+
+
+/**
+ * Parse a human-readable amount to bigint wei
+ * @param {string|number} amount - Human readable amount (e.g., "1.5")
+ * @param {number} decimals - Token decimals (default 18)
+ * @returns {bigint} Amount in wei
+ */
+export function parseUnits(amount, decimals = 18) {
+  if (!amount || amount === '' || amount === '0') return 0n
+
+  const amountStr = amount.toString()
+  const [whole, fraction = ''] = amountStr.split('.')
+
+  // Pad or truncate fraction to match decimals
+  const paddedFraction = fraction.padEnd(decimals, '0').slice(0, decimals)
+
+  // Combine whole and fraction parts
+  const combined = whole + paddedFraction
+
+  return BigInt(combined)
+}
+
+/**
+ * Format bigint wei amount to human-readable string
+ * @param {bigint|string} value - Amount in wei
+ * @param {number} decimals - Token decimals (default 18)
+ * @param {number} displayDecimals - Number of decimals to display (default 4)
+ * @returns {string} Human readable amount
+ */
+export function formatUnits(value, decimals = 18, displayDecimals = 4) {
+  if (!value || value === 0n || value === '0') return '0'
+
+  const valueStr = value.toString().padStart(decimals + 1, '0')
+  const whole = valueStr.slice(0, -decimals) || '0'
+  const fraction = valueStr.slice(-decimals)
+
+  // Trim trailing zeros from fraction
+  const trimmedFraction = fraction.replace(/0+$/, '')
+
+  if (!trimmedFraction) return whole
+
+  // Limit display decimals
+  const displayFraction = trimmedFraction.slice(0, displayDecimals)
+
+  return `${whole}.${displayFraction}`
+}

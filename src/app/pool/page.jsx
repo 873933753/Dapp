@@ -13,7 +13,7 @@ export default function PoolPage(){
   const swapAddress = getProtocolAddress(chainId, 'SWAP')
   const { address, isConnected } = useAccount()
   
-  const [mode, setMode] = useState('add')
+  const [mode, setMode] = useState('remove')
   
   /* 获取两种币种的余额 */
   /* const { data: tokenBalanceA, refetch: tokenBalanceARefetch } = useReadContract({
@@ -115,7 +115,13 @@ export default function PoolPage(){
 
         {/* Remove Liquidity Mode */}
         {mode === 'remove' && (
-          <RemoveForm />
+          <RemoveForm 
+            chainId = { chainId }
+            isConnected = {isConnected}
+            swapAddress = { swapAddress }
+            address = { address }
+            updatePool = {updatePool}
+          />
         )}
 
       </div>
