@@ -6,5 +6,5 @@
 export { ERC20_ABI } from './erc20'
 export { SWAP_ABI } from './swap'
 // export { STAKE_POOL_ABI } from './stakePool'
-// export { FARM_ABI } from './farm'
+export { FARM_ABI } from './farm'
 // export { LAUNCHPAD_ABI } from './launchpad'

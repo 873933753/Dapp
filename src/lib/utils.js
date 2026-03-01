@@ -133,3 +133,30 @@ export function formatUnits(value, decimals = 18, displayDecimals = 4) {
 
   return `${whole}.${displayFraction}`
 }
+
+/**
+ * Format USD value
+ * @param {number|string} value - USD amount
+ * @returns {string} Formatted USD amount
+ */
+export function formatUSD(value) {
+  const num = typeof value === 'string' ? parseFloat(value) : value
+
+  if (num >= 1000000) {
+    return `$${(num / 1000000).toFixed(2)}M`
+  } else if (num >= 1000) {
+    return `$${(num / 1000).toFixed(2)}K`
+  }
+
+  return `$${num.toFixed(2)}`
+}
+
+/**
+ * Format number with commas
+ * @param {number|string} value
+ * @returns {string}
+ */
+export function formatNumber(value) {
+  const num = typeof value === 'string' ? parseFloat(value) : value
+  return num.toLocaleString('en-US', { maximumFractionDigits: 2 })
+}
