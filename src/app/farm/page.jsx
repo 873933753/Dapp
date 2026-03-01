@@ -72,7 +72,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
   useEffect(() => {
     if (blockNumber || isHarvestSuccess) {
       pendingRewardRefetch();
-      console.log(`区块 ${blockNumber} - 重新获取数据`);
+      // console.log(`区块 ${blockNumber} - 重新获取数据`);
     }
   }, [blockNumber, pendingRewardRefetch, isHarvestSuccess]);
 

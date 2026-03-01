@@ -77,5 +77,29 @@
     "Approve Token":"代币授权",
     "Approving":"授权中..."
   }
+ },
+  "Bridge":{
+   "title":"跨连桥",
+   "warning":"提示",
+   "warnText":"转账状态为模拟数据。实际跨链桥需要集成 LayerZero、Wormhole 等跨链协议。",
+   "Start transfer":"发起跨链转账",
+   "Source Chain":"源链",
+   "Target Chain":"目标链",
+   "Token":"代币",
+   "Transfer amount":"转账数量",
+   "Receive address":"接收地址",
+   "transfer":"转账",
+   "transfering":"转账中...",
+   "recordTitle":"转账记录",
+   "none":"暂无转账记录",
+   "info":{
+      "title":"How it works",
+      "first":"选择源链和目标链，确保两者不同.",
+      "second":"输入要转账的代币数量.",
+      "third":"确认接收地址正确（默认为当前钱包地址）.",
+      "fourth":"跨链转账需要支付一定的手续费.",
+      "fifth":"转账时间取决于源链和目标链的确认速度.",
+      "sixth":"请勿在转账过程中关闭页面."
+   }
  }
 }

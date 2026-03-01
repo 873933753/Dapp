@@ -77,5 +77,32 @@
     "Approve Token":"Approve Token",
     "Approving":"Approving..."
   }
+ },
+ "Farm":{
+
+ },
+ "Bridge":{
+   "title":"Bridge",
+   "warning":"warning",
+   "warnText":"The transfer status is simulated. A real cross-chain bridge needs to integrate cross-chain protocols such as LayerZero and Wormhole.",
+   "Start transfer":"Start transfer",
+   "Source Chain":"Source Chain",
+   "Target Chain":"Target Chain",
+   "Token":"Token",
+   "Transfer amount":"Transfer amount",
+   "Receive address":"Receive address",
+   "transfer":"transter",
+   "transfering":"transfering...",
+   "recordTitle":"Transfer Record",
+   "none":"No transfer records available",
+   "info":{
+      "title":"How it works",
+      "first":"Choose the source chain and the target chain, and ensure they are different.",
+      "second":"Enter the amount of tokens you want to transfer.",
+      "third":"Please confirm that the receiving address is correct (default is the current wallet address).",
+      "fourth":"Cross-chain transfers require a certain transaction fee.",
+      "fifth":"The transfer time depends on the confirmation speed of the source chain and the target chain.",
+      "sixth":"Please do not close the page during the transfer process."
+   }
  }
 }

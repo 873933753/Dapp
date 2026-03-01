@@ -2,6 +2,7 @@
 import CustomConnectBtn from "@/components/CustomConnectBtn"
 import { ERC20_ABI } from "@/lib/abis"
 import { formatUnits } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 import { useEffect, useState } from "react"
 import { useAccount, useChainId, useReadContract } from "wagmi"
 
@@ -31,6 +32,7 @@ const SUPPORTED_TOKENS = [
 ]
 
 export default function BrigePage(){
+  const t = useTranslations('Bridge')
   const chainId = useChainId()
   const { address, isConnected } = useAccount()
 
@@ -120,20 +122,20 @@ export default function BrigePage(){
       <div className="max-w-4xl mx-auto">
         {/* 页面头部 */}
         <div className="mb-4">
-          <h1 className="text-3xl font-bold mb-2">跨链桥</h1>
+          <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
           {/* <p className="text-gray-600">在不同区块链网络之间安全转移资产</p> */}
         </div>
 
         {/* 模拟模式提示 */}
         <div className="mb-6 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <div className="flex items-start">
+          <div className="flex items-center">
             <svg className="w-6 h-6 text-yellow-600 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div className="flex items-center">
-              <p className="font-semibold text-yellow-800 mr-2">warning：</p>
+              <p className="font-semibold text-yellow-800 mr-2">{t('warning')}：</p>
               <p className="text-sm text-yellow-700">
-                转账状态为模拟数据。实际跨链桥需要集成 LayerZero、Wormhole 等跨链协议。
+                {t('warnText')}
               </p>
             </div>
           </div>
@@ -142,14 +144,14 @@ export default function BrigePage(){
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 左侧：转账表单 */}
           <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold mb-6">发起跨链转账</h2>
+            <h2 className="text-xl font-bold mb-6">{t('Start transfer')}</h2>
 
             {/* <form onSubmit={handleSubmit}> */}
             <div>
               {/* 源链选择 */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  源链
+                  {t('Source Chain')}
                 </label>
                 <select
                   value={sourceChain}
@@ -176,7 +178,7 @@ export default function BrigePage(){
               {/* 目标链选择 */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  目标链
+                  {t('Target Chain')}
                 </label>
                 <select
                   value={targetChain}
@@ -194,7 +196,7 @@ export default function BrigePage(){
               {/* 代币选择 */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  代币
+                  {t('Token')}
                 </label>
                 <select
                   value={selectedToken}
@@ -213,7 +215,7 @@ export default function BrigePage(){
               <div className="mb-4">
                 <div className="flex justify-between mb-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    转账数量
+                    {t('Transfer amount')}
                   </label>
                   {isConnected && (
                     <button
@@ -241,7 +243,7 @@ export default function BrigePage(){
               {/* 接收地址 */}
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  接收地址
+                  {t('Receive address')}
                 </label>
                 <input
                   type="text"
@@ -269,7 +271,7 @@ export default function BrigePage(){
                     disabled={ isSubmitting || !amount }
                     className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   >
-                    {isSubmitting ? '提交中...' : '发起转账'}
+                    {isSubmitting ? t('transfering') :  t('transfer')}
                   </button>
                 )
               }
@@ -279,14 +281,14 @@ export default function BrigePage(){
 
           {/* 右侧：转账历史 */}
           <div>
-            <h2 className="text-xl font-bold mb-4">转账记录</h2>
+            <h2 className="text-xl font-bold mb-4">{t('recordTitle')}</h2>
 
             {transfers.length === 0 ? (
               <div className="bg-white rounded-lg shadow-lg p-12 text-center">
                 <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p className="text-gray-500">暂无转账记录</p>
+                <p className="text-gray-500">{t('none')}</p>
               </div>
             ) : (
               <div className="max-h-[600px] overflow-y-auto">
@@ -396,16 +398,17 @@ function TransferRecord({transfer,onStatusUpdate}){
 }
 
 function InfoSection(){
+  const t = useTranslations('Bridge')
   return(
     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-      <h3 className="font-semibold mb-2">跨链桥使用说明</h3>
+      <h3 className="font-semibold mb-2">{t('title')}</h3>
       <ul className="text-sm text-gray-600 space-y-1">
-        <li>• 选择源链和目标链，确保两者不同</li>
-        <li>• 输入要转账的代币数量</li>
-        <li>• 确认接收地址正确（默认为当前钱包地址）</li>
-        <li>• 跨链转账需要支付一定的手续费</li>
-        <li>• 转账时间取决于源链和目标链的确认速度</li>
-        <li>• 请勿在转账过程中关闭页面</li>
+        <li>• {t('info.first')}</li>
+        <li>• {t('info.second')}</li>
+        <li>• {t('info.third')}</li>
+        <li>• {t('info.fourth')}</li>
+        <li>• {t('info.fifth')}</li>
+        <li>• {t('info.sixth')}</li>
       </ul>
     </div>
   )
