@@ -2,6 +2,12 @@
  "Basic": {
   "name":"汤"
  },
+ "navigation":{
+  "Swap":"交换",
+  "Pool":"资金池",
+  "Farm":"农场",
+  "Bridge":"跨连桥"
+ },
  "Wallet": {
   "button": "连接钱包"
  },
@@ -15,13 +21,33 @@
   "API Health":"检查 API 状态"
  },
  "Swap":{
+  "title":"交换",
+  "from":"出售",
+  "to":"购买",
   "wallet":"连接钱包",
+  "balance":"余额",
+  "swaping":"交换中...",
+  "select":"选择代币",
   "info":{
     "title":"如何使用",
     "first":"选择兑换代币",
     "second":"输入数量，获取实时报价",
     "third":" 授权代币使用权限（一次性）",
-    "last":"确认兑换交易"
+    "last":"确认兑换交易",
+    "Rate":"比例",
+    "Liquidity":"流动性",
+    "Price Impact":"价格影响",
+    "Slippage Tolerance":"滑点上限",
+    "Minimum Received":"最小可获得",
+    "warning":"价格影响过高！建议减小交易金额"
+  },
+   "slippage":{
+    "setting":"设置",
+    "slippage":"滑点上限",
+    "title":"什么是滑点？",
+    "explain":"滑点是预期交易价格与实际执行价格之间的差异。如果价格变动对您不利的幅度超过此百分比，交易将被撤销",
+    "done":"完成",
+    "custom":"自定义"
   }
  }
 }

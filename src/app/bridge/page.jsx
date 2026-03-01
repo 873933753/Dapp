@@ -27,7 +27,7 @@ const SUPPORTED_CHAINS = [
 const SUPPORTED_TOKENS = [
   { symbol: 'TKA', name: 'Token A', address: process.env.NEXT_PUBLIC_TOKEN_A_ADDRESS },
   { symbol: 'TKB', name: 'Token B', address: process.env.NEXT_PUBLIC_TOKEN_B_ADDRESS },
-  { symbol: 'TKC', name: 'Reward Token', address: process.env.NEXT_PUBLIC_REWARD_TOKEN_ADDRESS }
+  { symbol: 'DRT', name: 'Reward Token', address: process.env.NEXT_PUBLIC_REWARD_TOKEN_ADDRESS }
 ]
 
 export default function BrigePage(){

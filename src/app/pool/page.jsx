@@ -13,7 +13,7 @@ export default function PoolPage(){
   const swapAddress = getProtocolAddress(chainId, 'SWAP')
   const { address, isConnected } = useAccount()
   
-  const [mode, setMode] = useState('remove')
+  const [mode, setMode] = useState('add')
   
   /* 获取两种币种的余额 */
   /* const { data: tokenBalanceA, refetch: tokenBalanceARefetch } = useReadContract({

@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation'; // 客户端获取路径
 
 export default function NavBar(){
   const t = useTranslations('Wallet')
+  const tn = useTranslations('navigation')
   const pathname = usePathname()
   return(
     <div className="border-b border-gray-200 flex justify-center">
@@ -34,7 +35,7 @@ export default function NavBar(){
                          }
                       `}
                     >
-                      {navItem.name}
+                      {tn(navItem.name)}
                     </Link>
                   )
                 })

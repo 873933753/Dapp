@@ -168,7 +168,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
         <div className="flex justify-between items-center">
           <div>
             <div className="text-sm text-gray-600 mb-1">Pending Rewards</div>
-            <div className="text-xl font-bold text-orange-500">{userPendingReward} TKC</div>
+            <div className="text-xl font-bold text-orange-500">{userPendingReward} DRT</div>
           </div>
           <button
               onClick={handleHarvest}
@@ -360,7 +360,7 @@ export default function FarmPage(){
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Farm</h1>
-          <p className="text-gray-600">Stake LP tokens to earn TKC rewards</p>
+          <p className="text-gray-600">Stake LP tokens to earn DRT rewards</p>
         </div>
 
         {/* Overall Stats */}
@@ -473,7 +473,7 @@ function InfoSection(){
     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
       <h3 className="font-semibold mb-2">How Farming Works</h3>
       <ul className="text-sm text-gray-600 space-y-1">
-        <li>• Deposit LP tokens to start earning TKC rewards</li>
+        <li>• Deposit LP tokens to start earning DRT rewards</li>
         <li>• Rewards are calculated based on your share of the pool</li>
         <li>• Harvest rewards at any time without unstaking</li>
         <li>• Withdraw your LP tokens anytime (rewards auto-harvest)</li>

@@ -14,8 +14,8 @@ import { TOKENS, getTokenAddress, getProtocolAddress } from "@/lib/constants";
 import { useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { ERC20_ABI, SWAP_ABI } from "@/lib/abis";
-import { formatUnits, parseUnits } from "viem";
-import { handleInputChange, handleKeyDown, handlePaste } from "@/lib/utils";
+// import { formatUnits, parseUnits } from "viem";
+import { handleInputChange, handleKeyDown, handlePaste, formatUnits, parseUnits } from "@/lib/utils";
 import ApproveButton from "@/components/ApproveButton";
 
 
@@ -258,7 +258,7 @@ export default function SwapPage(){
     <div className="container max-w-lg mx-auto py-6 md:py-12 px-4">
       <div className="shadow-lg rounded-xl p-6 bg-gray-50">
         <div className="flex items-center justify-between">
-          <h2 className="font-bold text-2xl">Swap</h2>
+          <h2 className="font-bold text-2xl">{t('title')}</h2>
           <button 
             onClick={() => setShowSlippageModal(true)}
             className="p-2 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer group"
@@ -272,11 +272,11 @@ export default function SwapPage(){
         {/* token Input */}
         <div className={`rounded-2xl px-4 py-6 mt-6 relative ${!tokenIn?'bg-gray-200':'bg-white'}`}>
           <div className="flex justify-between text-l">
-            <span>Sell</span>
+            <span>{t('from')}</span>
             {
               tokenIn && (
                 <span className="text-blue-600">
-                  balance: { tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
+                  {t('balance')}: { tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
                 </span>
               )
             }
@@ -296,7 +296,7 @@ export default function SwapPage(){
             <div className={`border px-0 rounded-2xl ml-4 ${!tokenIn?'bg-blue-500 border-blue-500':''}`}>
               <Select onValueChange={handleSwitchIn} value={tokenIn} className='bg-blue-500'>
                 <SelectTrigger className={`[&>svg]:hidden flex items-center justify-between w-[110px] border-0 outline-0 focus-visible:ring-0 cursor-pointer font-bold text-lg data-[placeholder]:font-normal data-[placeholder]:text-sm ${!tokenIn?'data-[placeholder]:text-white':''}`}>
-                  <SelectValue placeholder='选择代币' />
+                  <SelectValue placeholder={t('select')} />
                   <div className="flex items-center">
                     <ChevronDown className={`h-4 w-4 opacity-100 ${!tokenIn?'text-white':''}`} />
                   </div>
@@ -330,7 +330,7 @@ export default function SwapPage(){
         {/* token output */}
         <div className={`rounded-2xl px-4 py-6 mt-2 relative ${!tokenOut?'bg-gray-200':'bg-white'}`}>
           <div className="flex justify-between text-l">
-            <span>Buy</span>
+            <span>{t('to')}</span>
           </div>
           <div className="flex justify-between items-center mt-4">
             <input
@@ -347,7 +347,7 @@ export default function SwapPage(){
             <div className={`border px-0 rounded-2xl ml-4 ${!tokenOut?'bg-blue-500 border-blue-500':''}`}>
               <Select onValueChange={handleSwitchOut} value={tokenOut} className='bg-blue-500'>
                 <SelectTrigger className={`[&>svg]:hidden flex items-center justify-between w-[110px] border-0 outline-0 focus-visible:ring-0 cursor-pointer font-bold text-lg data-[placeholder]:font-normal data-[placeholder]:text-sm ${!tokenOut?'data-[placeholder]:text-white':''}`}>
-                  <SelectValue placeholder='选择代币' />
+                  <SelectValue placeholder={t('select')} />
                   <div className="flex items-center">
                     <ChevronDown className={`h-4 w-4 opacity-100 ${!tokenOut?'text-white':''}`} />
                   </div>
@@ -407,7 +407,7 @@ export default function SwapPage(){
                 onClick={ handleSwap }
                 className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white"
               >
-                { isSwaping || isSwapConfirming ? 'Swaping...':'Swap' }
+                { isSwaping || isSwapConfirming ? 'Swaping...':t('title') }
               </button>
             </ApproveButton>
           )
@@ -447,12 +447,13 @@ export default function SwapPage(){
 
 /* Price Info */
 function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact, slippage, minAmountOut }){
+  const t = useTranslations('Swap.info')
   return(
     <div className="mb-4 space-y-2 mt-4">
       <div className="p-3 bg-blue-50 rounded-lg space-y-2">
         <div className="flex justify-between text-sm">
           {/* 汇率：amountOut/amountIn -In能换多少out */}
-          <span className="text-gray-600">Rate</span>
+          <span className="text-gray-600">{t("Rate")}</span>
           <span className="font-semibold">
             1 {tokenIn} = {(parseFloat(amountOut) / parseFloat(amountIn)).toFixed(4)} {tokenOut}
           </span>
@@ -461,14 +462,14 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
           <>
             <div className="flex justify-between text-sm">
               {/* 流动性：(reserves[0] + reserves[1])/1e18 * 1.5 */}
-              <span className="text-gray-600">Liquidity</span>
+              <span className="text-gray-600">{t("Liquidity")}</span>
               <span className="font-semibold">
                 {/* ${((Number(reserves[0]) + Number(reserves[1])) / 1e18 * 1.5).toFixed(2)} */}
                 {calculateLiquidity(reserves[0],reserves[1],18)} LP
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Price Impact</span>
+              <span className="text-gray-600">{t('Price Impact')}</span>
               {/* 价格影响-priceImpact (amountIn/reserves[0])/ 1e18) * 100 or amountIn/reserves[1]  */}
               <span className={`font-semibold ${parseFloat(priceImpact) > 5 ? 'text-red-600' : parseFloat(priceImpact) > 2 ? 'text-yellow-600' : 'text-green-600'}`}>
                 {priceImpact}%
@@ -478,18 +479,18 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
         )}
         <div className="flex justify-between text-sm">
           {/* 滑点数 */}
-          <span className="text-gray-600">Slippage Tolerance</span>
+          <span className="text-gray-600">{t('Slippage Tolerance')}</span>
           <span className="font-semibold">{slippage}%</span>
         </div>
         <div className="flex justify-between text-sm">
           {/* 最少收到: amountOut - (1 - slippage / 100) */}
-          <span className="text-gray-600">Minimum Received</span>
+          <span className="text-gray-600">{t('Minimum Received')}</span>
           <span className="font-semibold">{minAmountOut} {tokenOut}</span>
         </div>
       </div>
       {parseFloat(priceImpact) > 5 && (
         <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-xs text-red-800">⚠️ High price impact! Consider a smaller amount.</p>
+          <p className="text-xs text-red-800">⚠️ {t('warning')}.</p>
         </div>
       )}
     </div>
@@ -515,6 +516,7 @@ function InfoSection(){
 
 /* slippageModal */
 function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippage}){
+  const t = useTranslations('Swap.slippage')
   const [customSlippage, setCustomSlippage] = useState('')
   const handleCustomSlippage = (value) => {
     setCustomSlippage(value)
@@ -532,7 +534,7 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">Settings</h2>
+          <h2 className="text-xl font-bold">{t('setting')}</h2>
           <button
             onClick={() => setShowSlippageModal(false)}
             className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
@@ -545,7 +547,7 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold mb-3">Slippage Tolerance</label>
+            <label className="block text-sm font-semibold mb-3">{t('slippage')}</label>
             <div className="flex gap-2 mb-3">
               {slippagePresets.map((preset) => (
                 <button
@@ -566,7 +568,7 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
                 type="number"
                 value={customSlippage}
                 onChange={(e) => handleCustomSlippage(e.target.value)}
-                placeholder="Custom"
+                placeholder={t("custom")}
                 step="0.1"
                 min="0"
                 max={50}
@@ -585,11 +587,10 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
           <div className="pt-4 border-t">
             <div className="bg-blue-50 rounded-lg p-3">
               <p className="text-sm text-gray-700">
-                <strong>What is slippage?</strong>
+                <strong>{t('title')}</strong>
               </p>
               <p className="text-xs text-gray-600 mt-1">
-                Slippage is the difference between expected and actual trade price.
-                Your transaction will revert if the price changes unfavorably by more than this percentage.
+                {t('explain')}
               </p>
             </div>
           </div>
@@ -598,7 +599,7 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
             onClick={() => setShowSlippageModal(false)}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
           >
-            Done
+            {t('done')}
           </button>
         </div>
       </div>

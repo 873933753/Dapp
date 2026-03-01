@@ -5,6 +5,12 @@
  "Wallet": {
   "button": "Collect Wallet"
  },
+"navigation":{
+  "Swap":"Swap",
+  "Pool":"Pool",
+  "Farm":"Farm",
+  "Bridge":"Bridge"
+ },
  "Home":{
   "title":"Welcome to Hanber's DeFi DApp",
   "LaunchPad":"Launch and participate in token sales",
@@ -15,13 +21,33 @@
   "API Health":"Check API status"
  },
  "Swap":{
+  "title":"Swap",
+  "from":"Sell",
+  "to":"Buy",
   "wallet":"Collect Wallet",
+  "balance":"balance",
+  "swaping":"Swaping...",
+  "select":"Select token",
   "info":{
     "title":"How it works",
     "first":"Select tokens to swap",
     "second":"Enter amount and get instant quote",
     "third":" Approve token spending (one-time)",
-    "last":"Confirm swap transaction"
+    "last":"Confirm swap transaction",
+    "Rate":"Rate",
+    "Liquidity":"Liquidity",
+    "Price Impact":"Price Impact",
+    "Slippage Tolerance":"Slippage Tolerance",
+    "Minimum Received":"Minimum Received",
+    "warning":"High price impact! Consider a smaller amount"
+  },
+  "slippage":{
+    "setting":"Settings",
+    "slippage":"Slippage Tolerance",
+    "title":"What is slippage?",
+    "explain":"Slippage is the difference between expected and actual trade price. Your transaction will revert if the price changes unfavorably by more than this percentage.",
+    "done":"Done",
+    "custom":"Custom"
   }
  }
 }

@@ -1,16 +1,11 @@
 export const featureList = [
-  {
-    name:'LaunchPad',
-    description:'Launch and participate in token sales',
-    href:'/launchPad',
-    icon:'🚀'
-  },
-  {
-    name:'Bridge',
-    description:'Transfer assets across chains',
-    href:'/bridge',
-    icon:'🌉'
-  },
+  // {
+  //   name:'LaunchPad',
+  //   description:'Launch and participate in token sales',
+  //   href:'/launchPad',
+  //   icon:'🚀',
+  //   disNav:true
+  // },
   {
     name:'Swap',
     description:'Exchange tokens instantly',
@@ -30,10 +25,16 @@ export const featureList = [
     icon:'🌾'
   },
   {
-    name:'API Health',
-    description:'Check API status',
-    href:'/api/health',
-    icon:'❤️',
-    disNav:true
-  }
+    name:'Bridge',
+    description:'Transfer assets across chains',
+    href:'/bridge',
+    icon:'🌉'
+  },
+  // {
+  //   name:'API Health',
+  //   description:'Check API status',
+  //   href:'/api/health',
+  //   icon:'❤️',
+  //   disNav:true
+  // }
 ]
