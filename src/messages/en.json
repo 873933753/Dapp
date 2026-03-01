@@ -49,5 +49,33 @@
     "done":"Done",
     "custom":"Custom"
   }
+ },
+ "Pool":{
+  "Liquidity Pool":"Liquidity Pool",
+  "Balance":"Balance",
+  "Add Liquidity":"Add Liquidity",
+  "Remove Liquidity":"Remove Liquidity",
+  "intro":"Add or remove liquidity to earn trading fees",
+  "info":{
+    "title":"How it works",
+    "first":"Add liquidity in a 1:1 ratio to earn trading fees",
+    "second":" Receive LP tokens representing your pool share",
+    "third":"Remove liquidity anytime by burning LP tokens",
+    "last":"Earn 0.3% fee on all swaps proportional to your share"
+  },
+  "add":{
+    "Balance":"Balance",
+    "Add Liquidity":"Add Liquidity",
+    "Adding Liquidity":"Adding Liquidity...",
+    "Liquidity Added Successfully":"Liquidity Added Successfully"
+  },
+  "remove":{
+    "You will receive":"You will receive",
+    "Remove Liquidity":"Remove Liquidity",
+    "Removing Liquidity":"Removing Liquidity...",
+    "Liquidity Removed Successfully":"Liquidity Removed Successfully",
+    "Approve Token":"Approve Token",
+    "Approving":"Approving..."
+  }
  }
 }

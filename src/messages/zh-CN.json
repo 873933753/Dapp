@@ -49,5 +49,33 @@
     "done":"完成",
     "custom":"自定义"
   }
+ },
+ "Pool":{
+  "Liquidity Pool":"流动性池",
+  "Balance":"余额",
+  "Add Liquidity":"添加流动性",
+  "Remove Liquidity":"移除流动性",
+  "intro":"添加或移除流动性以赚取交易费",
+  "info":{
+    "title":"如何使用",
+    "first":"以1:1的比例添加流动性以赚取交易费",
+    "second":"接收代表您资金池份额的LP Token",
+    "third":"随时移除LP Token以取回流动性",
+    "last":"按比例赚取所有兑换中0.3%的费用"
+  },
+  "add":{
+    "Balance":"余额",
+    "Add Liquidity":"添加流动性",
+    "Adding Liquidity":"添加流动性中...",
+    "Liquidity Added Successfully":"添加流动性成功"
+  },
+  "remove":{
+    "You will receive":"你将收到",
+    "Remove Liquidity":"移除流动性",
+    "Removing Liquidity":"移除流动性中...",
+    "Liquidity Removed Successfully":"流动性移除成功",
+    "Approve Token":"代币授权",
+    "Approving":"授权中..."
+  }
  }
 }

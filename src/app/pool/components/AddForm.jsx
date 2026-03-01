@@ -4,11 +4,13 @@ import CustomConnectBtn from "@/components/CustomConnectBtn"
 import { ERC20_ABI, SWAP_ABI } from "@/lib/abis"
 import { getTokenAddress } from "@/lib/constants"
 import { handleInputChange, debounce } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { formatUnits, parseUnits } from "viem"
 import { useReadContract, useReadContracts, useWaitForTransactionReceipt, useWriteContract } from "wagmi"
 
 export default function AddForm({chainId,isConnected,balanceData,swapAddress,address,updatePool}){
+  const t = useTranslations('Pool.add')
   const [amountA, setAmountA] = useState('')
   const [amountB, setAmountB] = useState('')
   const tokenAddressA = getTokenAddress(chainId,'TKA')
@@ -318,7 +320,7 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
           <div className="flex justify-between mb-2">
             <label className="text-sm text-gray-600">Token A</label>
             <button className="text-sm text-blue-600">
-              Balance: { balanceData && balanceData[0]?.result ? Number(formatUnits(balanceData[0]?.result,18)).toFixed(4) : 0} TKA
+              {t('Balance')}: { balanceData && balanceData[0]?.result ? Number(formatUnits(balanceData[0]?.result,18)).toFixed(4) : 0} TKA
             </button>
           </div>
           <div className="flex items-center gap-3">
@@ -351,7 +353,7 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
           <div className="flex justify-between mb-2">
             <label className="text-sm text-gray-600">Token B</label>
             <button className="text-sm text-blue-600">
-              Balance: { balanceData && balanceData[1]?.result ? Number(formatUnits(balanceData[1]?.result,18)).toFixed(4) : 0} TKB
+              {t('Balance')}: { balanceData && balanceData[1]?.result ? Number(formatUnits(balanceData[1]?.result,18)).toFixed(4) : 0} TKB
             </button>
           </div>
           <div className="flex items-center gap-3">
@@ -388,16 +390,16 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
             onClick={handleApprove}
             disabled = {isPending || isConfirming}
             className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white">
-            { (isPending || isConfirming) ? "Approving..." : "Approve Token"}
+            { (isPending || isConfirming) ? t('"Approving') : t('Approve Token')}
           </button>
         )
          : (
           <button
             disabled={!amountA || !amountB || isAdding || isAddConfirming}
             onClick={handleAddLiquidity}
-            className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white"
+            className="bg-blue-100 text-blue-500 w-full cursor-pointer disabled:bg-gray-400 disabled:text-white font-semibold py-3 px-6 rounded-lg transition-colors"
           >
-            { (isAddConfirming || isAdding) ? "Adding Liquidity..." : "Add Liquidity"}
+            { (isAddConfirming || isAdding) ? t('Adding Liquidity') : t('Add Liquidity')}
           </button>
         )
       }
@@ -405,7 +407,7 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
       {/* Success Message */}
       {isAddSuccess && (
         <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-800 font-semibold">Liquidity Added Successfully!</p>
+          <p className="text-green-800 font-semibold">{t('Liquidity Added Successfully')}!</p>
           <a
             href={`https://sepolia.etherscan.io/tx/${addHash}`}
             target="_blank"

@@ -7,8 +7,10 @@ import { useAccount , useChainId, useReadContract, useReadContracts } from "wagm
 import AddForm from "./components/AddForm"
 import RemoveForm from "./components/RemoveForm"
 import PoolDash from "./components/PoolDash"
+import { useTranslations } from "next-intl"
 
 export default function PoolPage(){
+  const t = useTranslations('Pool')
   const chainId = useChainId()
   const swapAddress = getProtocolAddress(chainId, 'SWAP')
   const { address, isConnected } = useAccount()
@@ -63,8 +65,8 @@ export default function PoolPage(){
     <div className="container max-w-2xl mx-auto py-12">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2">Liquidity Pool</h1>
-        <p className="text-gray-600">Add or remove liquidity to earn trading fees</p>
+        <h1 className="text-3xl font-bold mb-2">{t('Liquidity Pool')}</h1>
+        <p className="text-gray-600">{t('intro')}</p>
       </div>
 
       {/* Pool Stats */}
@@ -86,7 +88,7 @@ export default function PoolPage(){
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Add Liquidity
+            {t('Add Liquidity')}
           </button>
           <button
             onClick={() => setMode('remove')}
@@ -96,7 +98,7 @@ export default function PoolPage(){
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
             }`}
           >
-            Remove Liquidity
+            {t('Remove Liquidity')}
           </button>
         </div>
 
@@ -133,14 +135,15 @@ export default function PoolPage(){
 }
 
 function InfoSection(){
+  const t = useTranslations('Pool.info')
   return(
     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-      <h3 className="font-semibold mb-2">How it works</h3>
+      <h3 className="font-semibold mb-2">{t('title')}</h3>
       <ul className="text-sm text-gray-600 space-y-1">
-        <li>• Add liquidity in a 1:1 ratio to earn trading fees</li>
-        <li>• Receive LP tokens representing your pool share</li>
-        <li>• Remove liquidity anytime by burning LP tokens</li>
-        <li>• Earn 0.3% fee on all swaps proportional to your share</li>
+        <li>• {t('first')}</li>
+        <li>• {t('second')}</li>
+        <li>• {t('third')}</li>
+        <li>• {t('last')}</li>
       </ul>
     </div>
   )

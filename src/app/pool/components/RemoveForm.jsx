@@ -2,10 +2,12 @@
 import CustomConnectBtn from "@/components/CustomConnectBtn"
 import { SWAP_ABI } from "@/lib/abis"
 import { formatUnits, parseUnits } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 import { useEffect, useMemo, useState } from "react"
 import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi"
 
 export default function RemoveForm({isConnected,swapAddress,address,updatePool}){
+  const t = useTranslations('Pool.remove')
   const [lpAmount,setLpAmount] = useState('')
 
   // Read reserves from chain
@@ -133,11 +135,11 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
       {/* Output Amounts */}
       <div className="mb-6 space-y-3">
         <div className="bg-gray-50 rounded-xl p-4">
-          <div className="text-sm text-gray-600 mb-1">You will receive</div>
+          <div className="text-sm text-gray-600 mb-1">{t('You will receive')}</div>
           <div className="text-xl font-semibold">{calculateRemoveAmounts?.amountA} TKA</div>
         </div>
         <div className="bg-gray-50 rounded-xl p-4">
-          <div className="text-sm text-gray-600 mb-1">You will receive</div>
+          <div className="text-sm text-gray-600 mb-1">{t('You will receive')}</div>
           <div className="text-xl font-semibold">{calculateRemoveAmounts?.amountB} TKB</div>
         </div>
       </div>
@@ -157,35 +159,15 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
 
             className="w-full bg-red-200/50 hover:bg-red-300/50 hover:text-red-500 disabled:bg-gray-400 disabled:text-white text-red-400 font-semibold py-3 px-6 rounded-lg transition-colors"
           >
-            {isRemoving || isRemoveConfirming ? 'Removing Liquidity...' : 'Remove Liquidity'}
+            {isRemoving || isRemoveConfirming ? t('Removing Liquidity') : t('Remove Liquidity')}
           </button>
         ) : null
       }
-      {/* {!isConnected ? (
-        <button className="w-full bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg">
-          Connect Wallet
-        </button>
-      ) : !swapAddress || isMockMode ? (
-        <button
-          disabled
-          className="w-full bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg cursor-not-allowed"
-        >
-          {isMockMode ? 'Remove Liquidity (Mock Mode - Contract Not Deployed)' : 'Swap Contract Not Available'}
-        </button>
-      ) : (
-        <button
-          onClick={handleRemoveLiquidity}
-          disabled={!lpAmount || isRemoving || isRemoveConfirming}
-          className="w-full bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
-        >
-          {isRemoving || isRemoveConfirming ? 'Removing Liquidity...' : 'Remove Liquidity'}
-        </button>
-      )} */}
 
       {/* Success Message */}
       {isRemoveSuccess && (
         <div  className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-800 font-semibold">Liquidity Removed Successfully!</p>
+          <p className="text-green-800 font-semibold">{t('Liquidity Removed Successfully')}!</p>
           <a
             href={`https://sepolia.etherscan.io/tx/${removeHash}`}
             target="_blank"
