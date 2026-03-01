@@ -204,6 +204,40 @@ export default function SwapPage(){
     return impact
   },[reserves,amountIn,tokenIn])
 
+ /* swap */
+  const { data: swapHash, writeContract: swap, isPending: isSwaping } = useWriteContract()
+  const { isLoading: isSwapConfirming, isSuccess: isSwapSuccess } = useWaitForTransactionReceipt({
+    hash:swapHash
+  })
+
+  // 监听交易成功
+  useEffect(() => {
+    if (isSwapSuccess) {
+      handleSwapSuccess() // 通知父组件刷新
+    }
+  }, [isSwapSuccess])
+  
+  //发起swap
+  const handleSwap = async() => {
+    if(!amountIn || !amountOut || !swapAddress){
+      return
+    }   
+    try {
+      swap({
+        address: swapAddress,
+        abi: SWAP_ABI,
+        functionName: 'swap',
+        args: [tokenInData?.address, parseUnits(amountIn,18)], // 确保 args 必传且合法
+        enabled: Boolean(amountIn && tokenInData?.address)
+      },{
+        onError:(err) => {
+          console.log('err--',err)
+        }
+      });
+    } catch (err) {
+      console.error('Swap 交易失败详情：', err);
+    }
+  }
 
   //刷新余额
   useEffect(() => {
@@ -218,6 +252,7 @@ export default function SwapPage(){
     setAmountOut(0)
   }
 
+  
 
   return(
     <div className="container max-w-lg mx-auto py-6 md:py-12 px-4">
@@ -365,20 +400,33 @@ export default function SwapPage(){
               amountIn = {amountIn ? parseUnits(amountIn,tokenInData.decimals) : 0n}
               amountOut = {amountOut}
               onApproved = { handleApproved}
-              tokenInData = {tokenInData}
-              swapAddress = { swapAddress }
-              myAddress = {myAddress}
-              onSwapSuccess={handleSwapSuccess}
+              disabled = {!amountIn || !amountOut}
             >
-              {/* <button
-                disabled={!amountIn || !amountOut}
+              <button
+                disabled={!amountIn || !amountOut || isSwapConfirming || isSwaping}
+                onClick={ handleSwap }
                 className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white"
               >
-                {'Swap'}
-              </button> */}
+                { isSwaping || isSwapConfirming ? 'Swaping...':'Swap' }
+              </button>
             </ApproveButton>
           )
         }
+
+        {/* Success Message */}
+        {isSwapSuccess && (
+          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-green-800 font-semibold">Swap Successful!</p>
+            <a
+              href={`https://sepolia.etherscan.io/tx/${swapHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-blue-600 hover:underline"
+            >
+              View on Etherscan →
+            </a>
+          </div>
+        )}
       </div>
       {/* Info Section */}      
       <InfoSection />

@@ -74,7 +74,7 @@ function generateMockFarmStats() {
         rewardPerSecond: '3000000000000000000', // 3 tokens per second
         address: process.env.NEXT_PUBLIC_FARM_ADDRESS || '0x0000000000000000000000000000000000000000'
       },
-      {
+      /* {
         poolId: 1,
         id: 1,
         name: 'TKA-USDC LP Farm',
@@ -97,7 +97,7 @@ function generateMockFarmStats() {
         allocPoint: 50,
         totalStaked: '250000',
         rewardPerSecond: '1500000000000000000' // 1.5 tokens per second
-      }
+      } */
     ],
     apyHistory: apyHistory.map(item => ({
       ...item,

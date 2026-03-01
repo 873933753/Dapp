@@ -12,10 +12,8 @@ function ApproveButton({
   amountIn,
   amountOut,
   onApproved,
-  tokenInData,
-  swapAddress,
-  myAddress,
-  onSwapSuccess
+  children,
+  disabled=false
 }){
   const { address: ownerAddress } = useAccount()
   //判断是否需要授权
@@ -38,52 +36,22 @@ function ApproveButton({
     hash : writeHash
   })
 
+  const maxUint256 = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff')
+
   // 发起授权
   const handleApprove = () => {
-    if(!tokenAddress || !spenderAddress || !amountIn || !amountOut){
+    if(!tokenAddress || !spenderAddress || disabled){
       return
     }
     approve({ 
       address:tokenAddress,
       abi:ERC20_ABI,
       functionName:'approve',
-      args:[ spenderAddress, amountIn]
+      // args:[ spenderAddress, amountIn]
+      args:[ spenderAddress, maxUint256] // 授权额度无上限
     })
   }
 
-  const { data: swapHash, writeContract: swap, isPending: isSwaping } = useWriteContract()
-  const { isLoading: isSwapConfirming, isSuccess: isSwapSuccess } = useWaitForTransactionReceipt({
-    hash:swapHash
-  })
-
-  // 监听交易成功
-  useEffect(() => {
-    if (isSwapSuccess) {
-      onSwapSuccess() // 通知父组件刷新
-    }
-  }, [isSwapSuccess, onSwapSuccess])
-  
-  //发起swap
-  const handleSwap = async() => {
-    if(!amountIn || !amountOut || !swapAddress){
-      return
-    }   
-    try {
-      swap({
-        address: swapAddress,
-        abi: SWAP_ABI,
-        functionName: 'swap',
-        args: [tokenAddress, amountIn], // 确保 args 必传且合法
-        enabled: Boolean(amountIn && tokenAddress)
-      },{
-        onError:(err) => {
-          console.log('err--',err)
-        }
-      });
-    } catch (err) {
-      console.error('Swap 交易失败详情：', err);
-    }
-  }
 
   useEffect(() => {
     //如果金额还未输入，授权额度也未读取，还不用授权
@@ -97,12 +65,8 @@ function ApproveButton({
     setNeedsApproval(allowanceBig < amountBig)
   },[amountIn,allowance])
   
-  //如果不需要授权，则可以swap
-  // if(!needsApproval){
-  //   return children
-  // }
 
-  // 授权成功
+   // 授权成功
   useEffect(() => {
     if(isApproved){
       refetchAllowance() // 重新获取授权额度，用于展示
@@ -111,40 +75,24 @@ function ApproveButton({
     }
   },[isApproved, onApproved, refetchAllowance])
 
+  //如果不需要授权，则可以swap
+  if(!needsApproval){
+    return children
+  }
+
   return(
     <>
       {
-        needsApproval && amountOut ? (
+        needsApproval ? (
           <button 
-            disabled = { !amountIn || !amountOut || isApproving || isConfirming}
+            // disabled = { !amountIn || !amountOut || isApproving || isConfirming}
+            disabled={disabled || isApproving || isConfirming}
             onClick = { handleApprove }
             className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white">
             { (isApproving || isConfirming) ? "Approving..." : "Approve Token"}
           </button>
-        ):(
-          <button
-            disabled={!amountIn || !amountOut || isSwapConfirming || isSwaping}
-            onClick={ handleSwap }
-            className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white"
-          >
-            { isSwaping || isSwapConfirming ? 'Swaping...':'Swap' }
-          </button>
-        )
+        ) : null
       }
-      {/* Success Message */}
-      {isSwapSuccess && (
-        <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-          <p className="text-green-800 font-semibold">Swap Successful!</p>
-          <a
-            href={`https://sepolia.etherscan.io/tx/${swapHash}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm text-blue-600 hover:underline"
-          >
-            View on Etherscan →
-          </a>
-        </div>
-      )}
     </>
   )
 }
