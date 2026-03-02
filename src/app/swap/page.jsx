@@ -319,10 +319,10 @@ export default function SwapPage(){
           </div>
           {/* 翻转token */}
           <button
-            className="bg-white cursor-pointer border-4 border-gray-100 rounded-xl p-2 hover:bg-gray-50 transition-colors absolute left-1/2 -translate-x-1/2 z-10" 
+            className="bg-white dark:bg-gray-700 cursor-pointer border-4 border-gray-100 dark:border-gray-600 rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors absolute left-1/2 -translate-x-1/2 z-10" 
             onClick={switchTokens}
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
             </svg>
           </button>
@@ -450,10 +450,10 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
   const t = useTranslations('Swap.info')
   return(
     <div className="mb-4 space-y-2 mt-4">
-      <div className="p-3 bg-blue-50 rounded-lg space-y-2">
+      <div className="p-3 bg-blue-50 dark:bg-slate-800 rounded-lg space-y-2">
         <div className="flex justify-between text-sm">
           {/* 汇率：amountOut/amountIn -In能换多少out */}
-          <span className="text-gray-600">{t("Rate")}</span>
+          <span className="text-gray-600 dark:text-gray-300">{t("Rate")}</span>
           <span className="font-semibold">
             1 {tokenIn} = {(parseFloat(amountOut) / parseFloat(amountIn)).toFixed(4)} {tokenOut}
           </span>
@@ -462,14 +462,14 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
           <>
             <div className="flex justify-between text-sm">
               {/* 流动性：(reserves[0] + reserves[1])/1e18 * 1.5 */}
-              <span className="text-gray-600">{t("Liquidity")}</span>
+              <span className="text-gray-600 dark:text-gray-300">{t("Liquidity")}</span>
               <span className="font-semibold">
                 {/* ${((Number(reserves[0]) + Number(reserves[1])) / 1e18 * 1.5).toFixed(2)} */}
                 {calculateLiquidity(reserves[0],reserves[1],18)} LP
               </span>
             </div>
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">{t('Price Impact')}</span>
+              <span className="text-gray-600 dark:text-gray-300">{t('Price Impact')}</span>
               {/* 价格影响-priceImpact (amountIn/reserves[0])/ 1e18) * 100 or amountIn/reserves[1]  */}
               <span className={`font-semibold ${parseFloat(priceImpact) > 5 ? 'text-red-600' : parseFloat(priceImpact) > 2 ? 'text-yellow-600' : 'text-green-600'}`}>
                 {priceImpact}%
@@ -479,18 +479,18 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
         )}
         <div className="flex justify-between text-sm">
           {/* 滑点数 */}
-          <span className="text-gray-600">{t('Slippage Tolerance')}</span>
+          <span className="text-gray-600 dark:text-gray-300">{t('Slippage Tolerance')}</span>
           <span className="font-semibold">{slippage}%</span>
         </div>
         <div className="flex justify-between text-sm">
           {/* 最少收到: amountOut - (1 - slippage / 100) */}
-          <span className="text-gray-600">{t('Minimum Received')}</span>
+          <span className="text-gray-600 dark:text-gray-300">{t('Minimum Received')}</span>
           <span className="font-semibold">{minAmountOut} {tokenOut}</span>
         </div>
       </div>
       {parseFloat(priceImpact) > 5 && (
-        <div className="p-2 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-xs text-red-800">⚠️ {t('warning')}.</p>
+        <div className="p-2 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg">
+          <p className="text-xs text-red-800 dark:text-red-200">⚠️ {t('warning')}.</p>
         </div>
       )}
     </div>
@@ -531,15 +531,15 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
     setCustomSlippage('')
   }
   return(
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+    <div className="fixed inset-0 bg-black/50 dark:bg-black/75 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold">{t('setting')}</h2>
+          <h2 className="text-xl font-bold dark:text-white">{t('setting')}</h2>
           <button
             onClick={() => setShowSlippageModal(false)}
-            className="p-1 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -547,7 +547,7 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold mb-3">{t('slippage')}</label>
+            <label className="block text-sm font-semibold mb-3 dark:text-white">{t('slippage')}</label>
             <div className="flex gap-2 mb-3">
               {slippagePresets.map((preset) => (
                 <button
@@ -556,7 +556,7 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
                   className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
                     slippage === preset && !customSlippage
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                   }`}
                 >
                   {preset}%
@@ -572,24 +572,24 @@ function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippag
                 step="0.1"
                 min="0"
                 max={50}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-8"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-8"
               />
-              <span className="absolute right-3 top-2 text-gray-500">%</span>
+              <span className="absolute right-3 top-2 text-gray-500 dark:text-gray-400">%</span>
             </div>
             {customSlippage && parseFloat(customSlippage) > 5 && (
-              <p className="mt-2 text-sm text-yellow-600">⚠️ High slippage may result in unfavorable rates</p>
+              <p className="mt-2 text-sm text-yellow-600 dark:text-yellow-400">⚠️ High slippage may result in unfavorable rates</p>
             )}
             {customSlippage && parseFloat(customSlippage) > 15 && (
-              <p className="mt-2 text-sm text-red-600">⚠️ Very high slippage! You may lose significant value.</p>
+              <p className="mt-2 text-sm text-red-600 dark:text-red-400">⚠️ Very high slippage! You may lose significant value.</p>
             )}
           </div>
 
-          <div className="pt-4 border-t">
-            <div className="bg-blue-50 rounded-lg p-3">
-              <p className="text-sm text-gray-700">
+          <div className="pt-4 border-t dark:border-gray-700">
+            <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-3">
+              <p className="text-sm text-gray-700 dark:text-blue-100">
                 <strong>{t('title')}</strong>
               </p>
-              <p className="text-xs text-gray-600 mt-1">
+              <p className="text-xs text-gray-600 dark:text-blue-200 mt-1">
                 {t('explain')}
               </p>
             </div>
