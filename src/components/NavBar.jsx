@@ -2,6 +2,7 @@
 
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import LocaleSwitcher from "./LocaleSwitcher"
+import ThemeSwitcher from "./ThemeSwitcher"
 import { useTranslations } from "next-intl"
 import { featureList as navlist } from "@/config/list"
 import Link from "next/link"
@@ -45,6 +46,7 @@ export default function NavBar(){
         {/* <LanguageSwitcher /> */}
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
+          <ThemeSwitcher />
           {/* <button>链接钱包</button> */}
           <ConnectButton
             label={t('button')}

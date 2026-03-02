@@ -12,6 +12,8 @@ import {
 import { wagmiConfig } from "@/lib/wagmiConfig";
 import { mainnet } from 'viem/chains';
 import { useLocale  } from 'next-intl';
+import { useEffect } from 'react';
+import { useThemeStore } from '@/store/themeStore';
 // import { useLanguageStore } from '@/store/languageStore';
 
 
@@ -19,6 +21,19 @@ export default function Web3Provider({children}){
   const queryClient = new QueryClient();
   
   const locale = useLocale()
+  // read theme value from store (not to confuse with RainbowKit theme)
+  const themeMode = useThemeStore((s) => s.theme);
+
+  // 添加/移除 body.dark 类以用于 tailwind dark variants
+  // flipping the <body> avoids hydration mismatch on <html> attributes
+  useEffect(() => {
+    const target = document.body;
+    if (themeMode === 'dark') {
+      target.classList.add('dark');
+    } else {
+      target.classList.remove('dark');
+    }
+  }, [themeMode]);
 
   // 获取全局语言状态
   // const { locale } = useLanguageStore();
