@@ -14,10 +14,10 @@ export default function NavBar(){
   const tn = useTranslations('navigation')
   const pathname = usePathname()
   return(
-    <div className="border-b border-gray-200 flex justify-center">
+    <div className="border-b border-border flex justify-center">
       <div className="container py-4 px-2 flex justify-between">
         <div className="flex items-center">
-            <span className="text-m md:text-2xl font-bold text-blue-500">DeFi DApp</span>
+            <span className="text-m md:text-2xl font-bold text-primary">DeFi DApp</span>
             {/* 移动端优点hidden，否则flex布局 */}
             <div className="hidden md:flex items-center">
               {
@@ -28,12 +28,13 @@ export default function NavBar(){
                       href={navItem.href}
                       key={navItem.name}
                       className={`
-                        mx-4 text-gray-500 hover:text-gray-900 select-none text-sm cursor-pointer
+                        mx-4 select-none text-sm cursor-pointer
                         ${navItem.disNav?'hidden':''}
                         ${
-                          // 核心：匹配 /pool 时高亮
-                          isActive ? 'text-gray-900 font-bold' : '' // 非高亮时保留原样式
-                         }
+                          isActive
+                            ? 'text-primary font-bold opacity-100'
+                            : 'text-foreground opacity-70 hover:opacity-100 hover:text-primary'
+                        }
                       `}
                     >
                       {tn(navItem.name)}
