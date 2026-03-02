@@ -14,9 +14,10 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const locale = await getLocale()
   const message = await getMessages()
+  
   return (
     <html lang={locale}>
-      <body>
+      <body className="dark">
         <NextIntlClientProvider>
           <Web3Provider>
             <NavBar />

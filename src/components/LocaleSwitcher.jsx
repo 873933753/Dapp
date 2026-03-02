@@ -43,39 +43,18 @@ export default function LocaleSwitcher(){
           </SelectGroup>
         </SelectContent>
       </Select> */}
-      <div className="flex items-center bg-gray-100 rounded-lg p-1 w-fit">
-        {/* EN 按钮 */}
+      {/* <div className="flex items-center bg-gray-100 rounded-lg p-1 w-fit"> */}
+        {/* 单一图标按钮：根据当前语言显示不同表情，点击切换 */}
         <button
           disabled={isPending}
-          onClick={() => handleSwitch('en')}
-          className={`
-            px-4 py-2 rounded-md text-l font-medium cursor-pointer
-            transition-all duration-300 ease-in-out
-            ${locale === 'en' 
-              ? 'bg-white text-blue-500 shadow-md scale-102' 
-              : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200 scale-100'
-            }
-          `}
+          onClick={() => handleSwitch(locale === 'en' ? 'zh-CN' : 'en')}
+          aria-label={locale === 'en' ? '切换到中文' : 'Switch to English'}
+          title={locale === 'en' ? '切换到中文 — 🐼' : 'Switch to English — 🤡'}
+          className={`p-2 rounded-lg bg-gray-200 flex items-center justify-center text-sm font-semibold cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${locale === 'en' ? 'text-blue-500' : 'text-gray-600 hover:text-gray-800'} dark:bg-gray-700 text-gray-800 dark:text-gray-200`}
         >
-          EN
+          <span className="select-none w-5 h-5">{locale === 'en' ? 'EN' : 'Zh'}</span>
         </button>
-
-        {/* 中文按钮 */}
-        <button
-          disabled={isPending}
-          onClick={() => handleSwitch('zh-CN')}
-          className={`
-           px-4 py-2 rounded-md text-l font-medium cursor-pointer
-           transition-all duration-300 ease-in-out
-            ${locale === 'zh-CN' 
-              ? 'bg-white text-blue-500 shadow-md scale-102' 
-              : 'text-gray-600 hover:text-gray-800 hover:bg-gray-200 scale-100'
-            }
-          `}
-        >
-          中文
-        </button>
-      </div>
+      {/* </div> */}
     </div>
   )
 }
