@@ -275,7 +275,7 @@ export default function SwapPage(){
             <span>{t('from')}</span>
             {
               tokenIn && (
-                <span className="text-blue-600">
+                <span className="text-blue-400">
                   {t('balance')}: { tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
                 </span>
               )
