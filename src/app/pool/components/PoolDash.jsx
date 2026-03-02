@@ -39,7 +39,7 @@ export default function PoolDash({chainId,swapAddress,refreshTrigger}){
 
   return(
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-      <div className="bg-blue-100  rounded-lg shadow-lg p-6 text-gray-700">
+      <div className="bg-blue-100 dark:bg-gray-800 rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
         <div className="text-sm opacity-90 mb-1">Total TVL</div>
         <div className="text-2xl font-bold">
           {poolData?.pools?.[0]?.tvl
@@ -49,14 +49,14 @@ export default function PoolDash({chainId,swapAddress,refreshTrigger}){
         </div>
       </div>
 
-      <div className="bg-blue-100 text-blue-500 rounded-lg shadow-lg p-6 text-gray-700">
+      <div className="bg-blue-100 dark:bg-gray-800 text-blue-500 rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
         <div className="text-sm opacity-90 mb-1">Reserve A</div>
         <div className="text-2xl font-bold">
           {reserves ? Number(formatUnits(reserves[0], 18, 2)).toFixed(2) : '0'} TKA
         </div>
       </div>
 
-      <div className="bg-blue-100 text-blue-500 rounded-lg shadow-lg p-6 text-gray-700">
+      <div className="bg-blue-100 dark:bg-gray-800 text-blue-500 rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
         <div className="text-sm opacity-90 mb-1">Reserve B</div>
         <div className="text-2xl font-bold">
           {reserves ? Number(formatUnits(reserves[1], 18, 2)).toFixed(2) : '0'} TKB
