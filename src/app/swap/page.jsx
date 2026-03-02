@@ -403,7 +403,12 @@ export default function SwapPage(){
               disabled = {!amountIn || !amountOut}
             >
               <button
-                disabled={!amountIn || !amountOut || isSwapConfirming || isSwaping}
+                disabled={
+                  !amountIn || !amountOut ||
+                  parseFloat(amountIn) <= 0 ||
+                  parseFloat(amountOut) <= 0 ||
+                  isSwapConfirming || isSwaping
+                }
                 onClick={ handleSwap }
                 className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-white"
               >

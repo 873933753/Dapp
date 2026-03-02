@@ -127,7 +127,7 @@ export default function BrigePage(){
         </div>
 
         {/* 模拟模式提示 */}
-        <div className="mb-6 p-2 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <div className="mb-6 p-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/20 rounded-lg">
           <div className="flex items-center">
             <svg className="w-6 h-6 text-yellow-600 mr-3 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -143,20 +143,20 @@ export default function BrigePage(){
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 左侧：转账表单 */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-xl font-bold mb-6">{t('Start transfer')}</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 dark:border dark:border-gray-700">
+            <h2 className="text-xl font-bold mb-6 dark:text-white">{t('Start transfer')}</h2>
 
             {/* <form onSubmit={handleSubmit}> */}
             <div>
               {/* 源链选择 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   {t('Source Chain')}
                 </label>
                 <select
                   value={sourceChain}
                   onChange={(e) => setSourceChain(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {SUPPORTED_CHAINS.map(chain => (
                     <option key={chain.id} value={chain.name}>
@@ -168,8 +168,8 @@ export default function BrigePage(){
 
               {/* 箭头 */}
               <div className="flex justify-center -my-2 mb-2">
-                <div className="bg-gray-100 rounded-full p-2">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="bg-gray-100 dark:bg-gray-700 rounded-full p-2">
+                  <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                   </svg>
                 </div>
@@ -177,13 +177,13 @@ export default function BrigePage(){
 
               {/* 目标链选择 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   {t('Target Chain')}
                 </label>
                 <select
                   value={targetChain}
                   onChange={(e) => setTargetChain(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {SUPPORTED_CHAINS.filter(c => c.name !== sourceChain).map(chain => (
                     <option key={chain.id} value={chain.name}>
@@ -195,13 +195,13 @@ export default function BrigePage(){
 
               {/* 代币选择 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   {t('Token')}
                 </label>
                 <select
                   value={selectedToken}
                   onChange={(e) => setSelectedToken(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   {SUPPORTED_TOKENS.map(token => (
                     <option key={token.symbol} value={token.symbol}>
@@ -214,13 +214,13 @@ export default function BrigePage(){
               {/* 金额输入 */}
               <div className="mb-4">
                 <div className="flex justify-between mb-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
                     {t('Transfer amount')}
                   </label>
                   {isConnected && (
                     <button
                       type="button"
-                      className="text-sm text-blue-600 hover:text-blue-700"
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
                     >
                       balance: {userBalance} {selectedToken}
                     </button>
@@ -232,9 +232,9 @@ export default function BrigePage(){
                     value={amount}
                     onChange={e => setAmount(e.target.value)}
                     placeholder="0.0"
-                    className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 font-semibold">
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 dark:text-gray-200 font-semibold">
                     {/* {selectedToken} */}
                   </div>
                 </div>
@@ -242,7 +242,7 @@ export default function BrigePage(){
 
               {/* 接收地址 */}
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
                   {t('Receive address')}
                 </label>
                 <input
@@ -250,14 +250,14 @@ export default function BrigePage(){
                   value={recipient}
                   onChange={(e) => setRecipient(e.target.value)}
                   placeholder="0x..."
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                  className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                 />
               </div>
 
               {/* 错误提示 */}
               {error && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                  <p className="text-sm text-red-800">{error}</p>
+                <div className="mb-4 p-3 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg">
+                  <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
                 </div>
               )}
 
@@ -269,7 +269,7 @@ export default function BrigePage(){
                   <button
                     onClick={handleSubmit}
                     disabled={ isSubmitting || !amount }
-                    className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+                    className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 dark:disabled:bg-gray-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
                   >
                     {isSubmitting ? t('transfering') :  t('transfer')}
                   </button>
@@ -284,11 +284,11 @@ export default function BrigePage(){
             <h2 className="text-xl font-bold mb-4">{t('recordTitle')}</h2>
 
             {transfers.length === 0 ? (
-              <div className="bg-white rounded-lg shadow-lg p-12 text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-12 text-center dark:border dark:border-gray-700">
                 <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p className="text-gray-500">{t('none')}</p>
+                <p className="text-gray-500 dark:text-gray-400">{t('none')}</p>
               </div>
             ) : (
               <div className="max-h-[600px] overflow-y-auto">
@@ -319,13 +319,13 @@ function TransferRecord({transfer,onStatusUpdate}){
   const getStatusInfo = (status) => {
     switch (status) {
       case 'queued':
-        return { text: '队列中', color: 'bg-yellow-100 text-yellow-800', icon: '⏳',status: 'queued'}
+        return { text: '队列中', color: 'bg-yellow-100 dark:bg-yellow-700 text-yellow-800 dark:text-yellow-200', icon: '⏳',status: 'queued'}
       case 'inflight':
-        return { text: '处理中', color: 'bg-blue-100 text-blue-800', icon: '🚀' ,status: 'inflight'}
+        return { text: '处理中', color: 'bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-200', icon: '🚀' ,status: 'inflight'}
       case 'complete':
-        return { text: '已完成', color: 'bg-green-100 text-green-800', icon: '✓' ,status: 'complete'}
+        return { text: '已完成', color: 'bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-200', icon: '✓' ,status: 'complete'}
       default:
-        return { text: status, color: 'bg-gray-100 text-gray-800', icon: '?' ,status: status}
+        return { text: status, color: 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200', icon: '?' ,status: status}
     }
   }
 
@@ -353,7 +353,7 @@ function TransferRecord({transfer,onStatusUpdate}){
   }, [currentStatus, transfer.transferId, onStatusUpdate])
 
   return(
-    <div className="bg-white rounded-lg shadow p-4 mb-3">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 mb-3 dark:border dark:border-gray-700">
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
@@ -362,19 +362,19 @@ function TransferRecord({transfer,onStatusUpdate}){
             </span>
             {
               statusInfo.status !== 'complete' ? (
-                <span className="text-xs text-gray-500">
+                <span className="text-xs text-gray-500 dark:text-gray-400">
                   预计 {transfer.estimatedTime} 分钟
                 </span>
               ) : null
             }
           </div>
-          <div className="text-sm text-gray-600">
+          <div className="text-sm text-gray-600 dark:text-gray-300">
             {transfer.sourceChain} → {transfer.targetChain}
           </div>
           <div className="text-lg font-semibold">
             {transfer.amount} {transfer.token}
           </div>
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
             手续费: {transfer.fee} {transfer.token}
           </div>
         </div>
@@ -382,7 +382,7 @@ function TransferRecord({transfer,onStatusUpdate}){
 
       {/* 进度条 */}
       {currentStatus !== 'complete' && (
-        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+        <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
           <div
             className="bg-blue-600 h-2 rounded-full transition-all duration-500"
             style={{ width: `${progress}%` }}
@@ -390,7 +390,7 @@ function TransferRecord({transfer,onStatusUpdate}){
         </div>
       )}
 
-      <div className="mt-2 text-xs text-gray-500 font-mono">
+      <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 font-mono">
         ID: {transfer.transferId}
       </div>
     </div>
@@ -400,9 +400,9 @@ function TransferRecord({transfer,onStatusUpdate}){
 function InfoSection(){
   const t = useTranslations('Bridge')
   return(
-    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-      <h3 className="font-semibold mb-2">{t('title')}</h3>
-      <ul className="text-sm text-gray-600 space-y-1">
+    <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <h3 className="font-semibold mb-2 text-gray-900 dark:text-gray-100">{t('info.title')}</h3>
+      <ul className="text-sm text-gray-600 dark:text-gray-300 space-y-1">
         <li>• {t('info.first')}</li>
         <li>• {t('info.second')}</li>
         <li>• {t('info.third')}</li>
