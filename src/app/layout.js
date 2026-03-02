@@ -28,6 +28,8 @@ export default async function RootLayout({ children }) {
         <NextIntlClientProvider>
           <Web3Provider>
             <NavBar />
+            {/* spacer equal to NavBar height to avoid content being covered by fixed NavBar */}
+            <div className="h-16" aria-hidden="true" />
             {children}
           </Web3Provider>
         </NextIntlClientProvider>

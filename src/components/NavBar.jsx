@@ -46,12 +46,14 @@ export default function NavBar(){
   `
 
   return(
-    <div className="border-b border-border flex justify-center">
+    <div className="fixed top-0 left-0 right-0 z-50 border-b border-border flex justify-center bg-background">
       <div className="container relative py-4 px-2 flex justify-between">
         <div className="flex items-center">
-            {/* logo image ahead of title */}
-            <img src="/hanber.png" alt="hanber" className="h-8 w-8 mr-1" />
-            <span className="text-m md:text-xl font-bold text-blue-500">DApp</span>
+            {/* logo + title link to home */}
+            <Link href="/" aria-label="Home" className="flex items-center hover:opacity-90">
+              <img src="/hanber.png" alt="hanber" className="h-8 w-8 mr-1" />
+              <span className="text-m md:text-xl font-bold text-blue-500">DApp</span>
+            </Link>
             {/* 移动端优点hidden，否则flex布局 */}
             <div className="hidden md:flex items-center">
               {
