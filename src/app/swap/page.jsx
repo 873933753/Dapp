@@ -256,7 +256,7 @@ export default function SwapPage(){
 
   return(
     <div className="container max-w-lg mx-auto py-6 md:py-12 px-4">
-      <div className="shadow-lg rounded-xl p-6 bg-gray-50">
+      <div className="shadow-lg rounded-xl p-6 bg-card dark:border dark:border-border">
         <div className="flex items-center justify-between">
           <h2 className="font-bold text-2xl">{t('title')}</h2>
           <button 
@@ -270,7 +270,7 @@ export default function SwapPage(){
           </button>
         </div>
         {/* token Input */}
-        <div className={`rounded-2xl px-4 py-6 mt-6 relative ${!tokenIn?'bg-gray-200':'bg-white'}`}>
+        <div className={`rounded-2xl px-4 py-6 mt-6 relative ${!tokenIn?'bg-gray-200 dark:bg-gray-700':'bg-card'} border border-border ring-1 ring-border`}>
           <div className="flex justify-between text-l">
             <span>{t('from')}</span>
             {
@@ -287,7 +287,7 @@ export default function SwapPage(){
               disabled={!tokenIn}
               type="number"
               placeholder="0"
-              className="text-2xl font-bold outline-none bg-transparent w-full"
+              className="text-2xl font-bold outline-none bg-transparent w-full appearance-none"
               onChange={(e) => handleAmountIn(e)}
               onKeyDown={handleKeyDown}
               onPaste={handlePaste}
@@ -328,7 +328,7 @@ export default function SwapPage(){
           </button>
         </div>
         {/* token output */}
-        <div className={`rounded-2xl px-4 py-6 mt-2 relative ${!tokenOut?'bg-gray-200':'bg-white'}`}>
+        <div className={`rounded-2xl px-4 py-6 mt-2 relative ${!tokenOut?'bg-gray-200 dark:bg-gray-700':'bg-card'} border border-border ring-1 ring-border`}>
           <div className="flex justify-between text-l">
             <span>{t('to')}</span>
           </div>
@@ -338,7 +338,7 @@ export default function SwapPage(){
               disabled={true}
               type="number"
               placeholder="0"
-              className="text-2xl font-bold outline-none bg-transparent w-full"
+              className="text-2xl font-bold outline-none bg-transparent w-full appearance-none"
               onChange={(e) => handleAmountOut(e)}
               onKeyDown={handleKeyDown}
               onPaste={handlePaste}
@@ -405,7 +405,7 @@ export default function SwapPage(){
               <button
                 disabled={!amountIn || !amountOut || isSwapConfirming || isSwaping}
                 onClick={ handleSwap }
-                className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white"
+                className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-white"
               >
                 { isSwaping || isSwapConfirming ? 'Swaping...':t('title') }
               </button>
@@ -502,8 +502,8 @@ function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact,
 function InfoSection(){
   const t = useTranslations('Swap')
   return(
-    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-      <h3 className="font-semibold mb-2">{t('info.title')}</h3>
+    <div className="mt-6 p-4 bg-card rounded-lg dark:border dark:border-border">
+      <h3 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">{t('info.title')}</h3>
       <ul className="text-sm text-gray-600 space-y-1">
         <li>• {t('info.first')}</li>
         <li>• {t('info.second')}</li>
