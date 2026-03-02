@@ -10,7 +10,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 import { wagmiConfig } from "@/lib/wagmiConfig";
-import { mainnet } from 'viem/chains';
+import { mainnet,sepolia } from 'viem/chains';
 import { useLocale  } from 'next-intl';
 import { useEffect } from 'react';
 import { useThemeStore } from '@/store/themeStore';
@@ -50,7 +50,7 @@ export default function Web3Provider({children}){
         <RainbowKitProvider
           modalSize="compact"
           theme={theme}
-          initialChain={mainnet}
+          initialChain={sepolia}
           locale={locale}
          >
           { children }

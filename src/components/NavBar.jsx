@@ -17,7 +17,8 @@ export default function NavBar(){
     <div className="border-b border-border flex justify-center">
       <div className="container py-4 px-2 flex justify-between">
         <div className="flex items-center">
-            <span className="text-m md:text-2xl font-bold text-primary">DeFi DApp</span>
+            {/* <span className="text-m md:text-2xl font-bold text-primary">DeFi DApp</span> */}
+             <span className="text-m md:text-2xl font-bold text-primary">DApp</span>
             {/* 移动端优点hidden，否则flex布局 */}
             <div className="hidden md:flex items-center">
               {
