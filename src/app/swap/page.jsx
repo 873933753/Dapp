@@ -275,7 +275,7 @@ export default function SwapPage(){
             <span>{t('from')}</span>
             {
               tokenIn && (
-                <span className="text-blue-400">
+                <span className="text-custom-primary">
                   {t('balance')}: { tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
                 </span>
               )
@@ -293,8 +293,8 @@ export default function SwapPage(){
               onPaste={handlePaste}
               value={amountIn}
             />
-            <div className={`border px-0 rounded-2xl ml-4 ${!tokenIn?'bg-blue-500 border-blue-500':''}`}>
-              <Select onValueChange={handleSwitchIn} value={tokenIn} className='bg-blue-500'>
+            <div className={`border px-0 rounded-2xl ml-4 ${!tokenIn?'bg-custom-primary border-custom-primary':''}`}>
+              <Select onValueChange={handleSwitchIn} value={tokenIn} className='bg-custom-primary'>
                 <SelectTrigger className={`[&>svg]:hidden flex items-center justify-between w-[110px] border-0 outline-0 focus-visible:ring-0 cursor-pointer font-bold text-lg data-[placeholder]:font-normal data-[placeholder]:text-sm ${!tokenIn?'data-[placeholder]:text-white':''}`}>
                   <SelectValue placeholder={t('select')} />
                   <div className="flex items-center">
@@ -410,7 +410,7 @@ export default function SwapPage(){
                   isSwapConfirming || isSwaping
                 }
                 onClick={ handleSwap }
-                className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-white"
+                className="bg-[var(--custom-btn-1)] border-blue-500 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-white"
               >
                 { isSwaping || isSwapConfirming ? 'Swaping...':t('title') }
               </button>

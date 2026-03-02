@@ -9,7 +9,8 @@
   "Swap":"Swap",
   "Pool":"Pool",
   "Farm":"Farm",
-  "Bridge":"Bridge"
+  "Bridge":"Bridge",
+  "menu":"Navigation menu"
  },
  "Home":{
   "title":"Welcome to Hanber's DeFi DApp",

@@ -118,7 +118,7 @@ export default function BrigePage(){
     }
   }, [address, recipient])
   return(
-    <div className="container py-12">
+    <div className="container py-6 px-4">
       <div className="max-w-4xl mx-auto">
         {/* 页面头部 */}
         <div className="mb-4">

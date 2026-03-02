@@ -62,7 +62,7 @@ export default function PoolPage(){
   }
 
   return(
-    <div className="container max-w-2xl mx-auto py-12">
+    <div className="container max-w-2xl mx-auto py-6 px-4">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold mb-2 dark:text-white">{t('Liquidity Pool')}</h1>

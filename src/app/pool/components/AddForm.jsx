@@ -329,9 +329,9 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
               value={amountA}
               onChange={ e => handleAmountA(e)}
               placeholder="0.0"
-              className="flex-1 text-2xl font-semibold bg-transparent outline-none"
+              className="flex-1 min-w-0 text-2xl font-semibold bg-transparent outline-none"
             />
-            <div className="bg-white dark:bg-gray-600 border dark:border-gray-500 rounded-lg px-3 py-2 font-semibold dark:text-white">
+            <div className="flex-shrink-0 bg-white dark:bg-gray-600 border dark:border-gray-500 rounded-lg px-3 py-2 font-semibold dark:text-white">
               TKA
             </div>
           </div>
@@ -362,9 +362,9 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
               onChange = { e => handleAmountB(e)}
               value={amountB}
               placeholder="0.0"
-              className="flex-1 text-2xl font-semibold bg-transparent outline-none"
+              className="flex-1 min-w-0 text-2xl font-semibold bg-transparent outline-none"
             />
-            <div className="bg-white dark:bg-gray-600 border dark:border-gray-500 rounded-lg px-3 py-2 font-semibold dark:text-white">
+            <div className="flex-shrink-0 bg-white dark:bg-gray-600 border dark:border-gray-500 rounded-lg px-3 py-2 font-semibold dark:text-white">
               TKB
             </div>
           </div>

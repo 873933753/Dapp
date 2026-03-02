@@ -6,7 +6,8 @@
   "Swap":"交换",
   "Pool":"资金池",
   "Farm":"农场",
-  "Bridge":"跨连桥"
+  "Bridge":"跨链桥",
+  "menu":"菜单"
  },
  "Wallet": {
   "button": "连接钱包"
