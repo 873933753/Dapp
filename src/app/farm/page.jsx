@@ -355,7 +355,7 @@ export default function FarmPage(){
   }
 
   return(
-    <div className="container py-6 px-4">
+    <div className="container py-6 px-4 mx-auto">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
