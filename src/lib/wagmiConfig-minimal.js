@@ -41,7 +41,12 @@ if (projectId && projectId.length === 32) {
         name: 'Hanber Defi',
         description: 'Hanber’s DApp',
         url: 'https://dapp-chi-five.vercel.app/',
-        icons: ['https://dapp-chi-five.vercel.app/hanber.png']
+        icons: ['https://dapp-chi-five.vercel.app/hanber.png?v=123']
+      },
+      qrModalOptions: {
+        themeMode: 'dark',         
+        enableExplorer: true        // 默认推荐钱包列表
+        // 这里也可以按需加 themeVariables / explorerXXX 配置
       }
     })
     

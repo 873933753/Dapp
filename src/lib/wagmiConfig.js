@@ -40,7 +40,7 @@ const connectors = [
       name: 'lucky', // 必选：DApp 名称
       description: 'lucky Website', // 可选：描述
       url: 'https://learn-web3-frontend.com',// 必选：DApp 官网地址
-      icons: ['https://avatars.githubusercontent.com/u/37784886'] // 必选：图标 URL 数组 256*256
+      icons: ['https://dapp-chi-five.vercel.app/hanber.png?v=123'] // 必选：图标 URL 数组 256*256
     }
   })
 ]
