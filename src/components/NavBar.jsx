@@ -1,13 +1,14 @@
 'use client'
 
 import { useEffect, useState } from "react"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit"
 import LocaleSwitcher from "./LocaleSwitcher"
 import ThemeSwitcher from "./ThemeSwitcher"
 import { useTranslations } from "next-intl"
 import { featureList as navlist } from "@/config/list"
 import Link from "next/link"
 import { usePathname } from 'next/navigation'; // 客户端获取路径
+import { useConnect, useAccount } from "wagmi"
 // import LanguageSwitcher from "./LanguageSwitcher"
 
 export default function NavBar(){
@@ -17,6 +18,24 @@ export default function NavBar(){
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSmallScreen, setIsSmallScreen] = useState(false)
   const visibleNavItems = navlist.filter(navItem => !navItem.disNav)
+
+  // WalletConnect 专用连接
+  const { connect, connectors } = useConnect()
+  const { isConnected } = useAccount() // 检测钱包连接状态
+  const wcConnector = connectors.find(c => c.id === 'walletConnect')
+  
+  const handleWalletConnectClick = async () => {
+    if (!wcConnector) {
+      console.warn('WalletConnect 连接器未找到')
+      return
+    }
+    
+    try {
+      await connect({ connector: wcConnector })
+    } catch (error) {
+      console.error('WalletConnect 连接失败:', error)
+    }
+  }
 
   useEffect(() => {
     setIsMenuOpen(false)
@@ -101,6 +120,18 @@ export default function NavBar(){
         <div className="flex items-center gap-2">
           <LocaleSwitcher />
           <ThemeSwitcher />
+          {/* WalletConnect 二维码扫码按钮 - 仅在未连接时显示 */}
+          {!isConnected && (
+            <button 
+              onClick={handleWalletConnectClick}
+              className="p-2 rounded-md transition-colors duration-200 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              title="WalletConnect 扫码连接"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 3h4v4H3V3zm6 0h4v4H9V3zm6 0h4v4h-4V3zM3 9h4v4H3V9zm6 0h4v4H9V9zm6 0h4v4h-4V9zM3 15h4v4H3v-4zm6 0h4v4H9v-4zm6 0h4v4h-4v-4z"/>
+              </svg>
+            </button>
+          )}
           {/* Wallet button: wrap and scale down on small screens to avoid covering menu */}
           <div className="min-w-0 md:min-w-auto md:transform-none transform scale-90 md:scale-100 md:ml-0 ml-2">
             <ConnectButton

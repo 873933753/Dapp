@@ -23,6 +23,16 @@ const transports = USE_CUSTOM_RPC ? {
 // 3、walletConnect二维码连接 - 注册reown
 const connectors = [
   injected(), //浏览器插件注入方式
+  // walletConnect({ //扫码连接
+  //   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
+  //   showQrModal: true,
+  //   metadata: {
+  //     name: 'Hander Defi', // 必选：DApp 名称
+  //     description: 'Hander’s DApp', // 可选：描述
+  //     url: 'https://learn-web3-frontend.com',// 必选：DApp 官网地址
+  //     icons: ['https://avatars.githubusercontent.com/u/37784886'] // 必选：图标 URL 数组 256*256
+  //   }
+  // })
   walletConnect({ //扫码连接
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID,
     showQrModal: true,
@@ -38,6 +48,6 @@ const connectors = [
 export const wagmiConfig = createConfig({
   chains:[chainsConfig,mainnet],
   transports,
-  // connectors,
+  connectors,
   ssr:true
 })

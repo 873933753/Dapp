@@ -9,7 +9,8 @@ import {
   QueryClientProvider,
   QueryClient,
 } from "@tanstack/react-query";
-import { wagmiConfig } from "@/lib/wagmiConfig";
+// import { wagmiConfig } from "@/lib/wagmiConfig";
+import { wagmiConfig } from "@/lib/wagmiConfig-minimal";
 import { mainnet,sepolia } from 'viem/chains';
 import { useLocale  } from 'next-intl';
 import { useEffect } from 'react';
@@ -48,7 +49,7 @@ export default function Web3Provider({children}){
       <QueryClientProvider client={queryClient}>
         {/* 设置为紧凑型 */}
         <RainbowKitProvider
-          modalSize="compact"
+          // modalSize="compact"
           theme={theme}
           initialChain={sepolia}
           locale={locale}
