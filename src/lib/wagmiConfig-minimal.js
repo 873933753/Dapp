@@ -23,27 +23,39 @@ const transports = {
 const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
 console.log('🔑 Project ID 状态:', projectId ? '✅已设置' : '❌未设置')
 
+// 验证 Project ID 格式 (应该是32位十六进制字符)
+if (projectId) {
+  const isValidFormat = /^[0-9a-f]{32}$/.test(projectId)
+  console.log('🔍 Project ID 格式:', isValidFormat ? '✅有效' : '❌无效 (应该是32位十六进制)')
+}
+
 const connectors = [injected()]
 
-// 最小配置的 WalletConnect - 避免任何可能的冲突
-if (projectId) {
+// 超级简化的 WalletConnect 配置
+if (projectId && projectId.length === 32) {
   try {
     const wcConnector = walletConnect({
       projectId: projectId,
       showQrModal: true,
       metadata: {
-        name: 'DApp',
-        description: 'Web3 DApp',
-        url: 'https://dapp-chi-five.vercel.app',
-        icons: ['https://avatars.githubusercontent.com/u/37784886']
+        name: 'Hanber Defi',
+        description: 'Hanber’s DApp',
+        url: 'https://dapp-chi-five.vercel.app/',
+        icons: ['https://dapp-chi-five.vercel.app/hanber.png']
       }
     })
     
     connectors.push(wcConnector)
-    console.log('✅ WalletConnect 已添加')
+    console.log('✅ 超简化 WalletConnect 已添加')
+    console.log('💡 如果仍有问题，请尝试：')
+    console.log('1. 使用 Trust Wallet 而不是 MetaMask')
+    console.log('2. 确保手机和电脑在同一 WiFi 网络')
+    console.log('3. 重启手机上的钱包 app')
   } catch (error) {
     console.error('❌ WalletConnect 添加失败:', error)
   }
+} else {
+  console.warn('⚠️ Project ID 无效或未设置')
 }
 
 export const wagmiConfig = createConfig({

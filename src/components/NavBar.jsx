@@ -21,8 +21,15 @@ export default function NavBar(){
 
   // WalletConnect 专用连接
   const { connect, connectors } = useConnect()
-  const { isConnected } = useAccount() // 检测钱包连接状态
+  const { isConnected, address } = useAccount() // 获取连接状态和地址
   const wcConnector = connectors.find(c => c.id === 'walletConnect')
+  
+  // 监听连接状态变化
+  useEffect(() => {
+    if (isConnected && address) {
+      // console.log('🎉 钱包连接成功！地址:', address)
+    }
+  }, [isConnected, address])
   
   const handleWalletConnectClick = async () => {
     if (!wcConnector) {
@@ -30,10 +37,21 @@ export default function NavBar(){
       return
     }
     
+    console.log('🔄 开始 WalletConnect 连接流程...')
+    
     try {
+      console.log('📱 请用手机钱包扫描二维码，并在手机上确认连接')
       await connect({ connector: wcConnector })
+      console.log('✅ WalletConnect 连接成功！')
     } catch (error) {
-      console.error('WalletConnect 连接失败:', error)
+      console.error('❌ WalletConnect 连接失败:', error)
+      
+      // 提供用户友好的错误提示
+      if (error.message?.includes('rejected') || error.message?.includes('denied')) {
+        console.log('💡 用户取消了连接，请重试并在手机上确认连接')
+      } else if (error.message?.includes('timeout')) {
+        console.log('💡 连接超时，请确保手机和电脑在同一网络，并重试')
+      }
     }
   }
 
