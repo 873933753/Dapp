@@ -14,17 +14,34 @@ export const metadata = {
   },
 };
 
+const themeInitScript = `(() => {
+  try {
+    const raw = localStorage.getItem('theme-storage');
+    let theme = 'dark';
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      theme = parsed?.state?.theme || parsed?.theme || theme;
+    }
+    const root = document.documentElement;
+    if (theme === 'dark') root.classList.add('dark');
+    else root.classList.remove('dark');
+  } catch (e) {
+    // no-op
+  }
+})();`;
+
 export default async function RootLayout({ children }) {
   const locale = await getLocale()
   const message = await getMessages()
   
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         {/* favicon replaced with hanber.png */}
         <link rel="icon" href="/hanber.png" />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="dark">
+      <body suppressHydrationWarning>
         <NextIntlClientProvider>
           <Web3Provider>
             <NavBar />

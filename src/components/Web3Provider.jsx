@@ -25,10 +25,10 @@ export default function Web3Provider({children}){
   // read theme value from store (not to confuse with RainbowKit theme)
   const themeMode = useThemeStore((s) => s.theme);
 
-  // 添加/移除 body.dark 类以用于 tailwind dark variants
-  // flipping the <body> avoids hydration mismatch on <html> attributes
+  // 添加/移除 .dark 类以用于 tailwind dark variants
+  // 使用 documentElement 与 layout 的首屏脚本保持一致，避免刷新时主题闪烁
   useEffect(() => {
-    const target = document.body;
+    const target = document.documentElement;
     if (themeMode === 'dark') {
       target.classList.add('dark');
     } else {
