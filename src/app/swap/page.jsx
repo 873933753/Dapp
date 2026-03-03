@@ -216,6 +216,36 @@ export default function SwapPage(){
       handleSwapSuccess() // 通知父组件刷新
     }
   }, [isSwapSuccess])
+
+  /* 测试网水龙头：TKA 余额为 0 时可领取 10 TKA */
+  const MINT_AMOUNT = 10n * 10n ** 18n // 10 TKA（18 位小数）
+
+  // 读取当前用户剩余可领取额度
+  const { data: remainingMintAmount } = useReadContract({
+    address: tokenInData.address,
+    abi: ERC20_ABI,
+    functionName: 'remainingMintAmount',
+    args: myAddress ? [myAddress] : undefined,
+    enabled: Boolean(myAddress && tokenIn === 'TKA' && tokenInData.address),
+  })
+
+  const { data: mintHash, writeContract: mintTKA, isPending: isMinting } = useWriteContract()
+  const { isLoading: isMintConfirming, isSuccess: isMintSuccess } = useWaitForTransactionReceipt({ hash: mintHash })
+
+  const handleMintTKA = () => {
+    if (!tokenInData.address) return
+    mintTKA({
+      address: tokenInData.address,
+      abi: ERC20_ABI,
+      functionName: 'mint',
+      args: [MINT_AMOUNT],
+    })
+  }
+
+  // 领取成功后刷新余额
+  useEffect(() => {
+    if (isMintSuccess) tokenBalanceRefetch()
+  }, [isMintSuccess])
   
   //发起swap
   const handleSwap = async() => {
@@ -274,10 +304,22 @@ export default function SwapPage(){
           <div className="flex justify-between text-l">
             <span>{t('from')}</span>
             {
-              tokenIn && (
-                <span className="text-custom-primary">
-                  {t('balance')}: { tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
-                </span>
+              isConnected && tokenIn && (
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-custom-primary">
+                    {t('balance')}: {tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
+                  </span>
+                  {/* 测试网水龙头：TKA 余额为 0 且合约允许领取时显示 */}
+                  {tokenIn === 'TKA' && (!tokenBalance || tokenBalance === 0n) && remainingMintAmount > 0n && (
+                    <button
+                      onClick={handleMintTKA}
+                      disabled={isMinting || isMintConfirming}
+                      className="text-xs px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800/60 transition-colors disabled:opacity-50 cursor-pointer"
+                    >
+                      {isMinting || isMintConfirming ? '领取中...' : ' 领取 10 TKA（测试网）'}
+                    </button>
+                  )}
+                </div>
               )
             }
             
