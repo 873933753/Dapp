@@ -30,6 +30,12 @@ export const featureList = [
     href:'/bridge',
     icon:'🌉'
   },
+  {
+    name:'Dashboard',
+    description:'View your stats and activities',
+    href:'/dashboard',
+    icon:'📊'
+  }
   // {
   //   name:'API Health',
   //   description:'Check API status',

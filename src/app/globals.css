@@ -143,3 +143,34 @@ input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+/* DuneChart custom scrollbar: remove buttons and blend with background */
+.dune-scroll {
+  scrollbar-width: thin; /* Firefox */
+  /* thumb then track */
+  scrollbar-color: var(--border) var(--card);
+}
+.dune-scroll::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.dune-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+.dune-scroll::-webkit-scrollbar-track {
+  background: var(--card);
+}
+.dune-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.dune-scroll:hover::-webkit-scrollbar-thumb {
+  background: var(--custom-primary);
+}
+.dune-scroll:hover {
+  scrollbar-color: var(--custom-primary) var(--card);
+}

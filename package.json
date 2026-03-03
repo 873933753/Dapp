@@ -22,7 +22,8 @@
     "tailwind-merge": "^3.4.0",
     "viem": "^2.45.2",
     "wagmi": "^2.19.5",
-    "zustand": "^5.0.11"
+    "zustand": "^5.0.11",
+    "echarts": "^5.4.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
