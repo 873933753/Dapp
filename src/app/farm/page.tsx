@@ -136,7 +136,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
   
 
   return(
-    <div className="bg-card dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-4 dark:border dark:border-gray-700">
+    <div className="bg-card rounded-lg shadow-lg p-6 mb-4 dark:border dark:border-border">
       <div className="flex justify-between items-start mb-4">
         <div>
           <h3 className="text-xl font-bold dark:text-white">{pool.name}</h3>
@@ -149,25 +149,25 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
 
       {/* Pool Stats */}
       <div className="grid grid-cols-3 gap-4 mb-4">
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">TVL</div>
-          <div className="text-lg font-semibold dark:text-white">{formatUSD(pool.tvl)}</div>
+        <div className="bg-muted rounded-lg p-3">
+          <div className="text-xs text-muted-foreground mb-1">TVL</div>
+          <div className="text-lg font-semibold">{formatUSD(pool.tvl)}</div>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
-          <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">Your Staked</div>
-          <div className="text-lg font-semibold dark:text-white">{userStaked} LP</div>
+        <div className="bg-muted rounded-lg p-3">
+          <div className="text-xs text-muted-foreground mb-1">Your Staked</div>
+          <div className="text-lg font-semibold">{userStaked} LP</div>
         </div>
-        <div className="bg-blue-50 dark:bg-gray-700 rounded-lg p-3">
+        <div className="bg-muted rounded-lg p-3">
           <div className="text-xs text-blue-500 dark:text-blue-300 mb-1">LP Balance</div>
           <div className="text-lg font-semibold text-blue-500 dark:text-blue-300">{userLpBalance} LP</div>
         </div>
       </div>
 
       {/* Pending Rewards */}
-      <div className="bg-orange-50 dark:bg-orange-50/20 border border-yellow-200 dark:border-orange-100/20 rounded-lg p-4 mb-4">
+      <div className="border border-border rounded-lg p-4 mb-4">
         <div className="flex justify-between items-center">
           <div>
-            <div className="text-sm text-gray-600 dark:text-gray-300 mb-1">Pending Rewards</div>
+            <div className="text-sm text-muted-foreground mb-1">Pending Rewards</div>
             <div className="text-xl font-bold text-orange-500 dark:text-orange-300">{userPendingReward} DRT</div>
           </div>
           <button
@@ -203,7 +203,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
             className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
               activeTab === 'deposit'
                 ? 'bg-blue-200 dark:bg-blue-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                : 'bg-secondary text-muted-foreground hover:bg-accent'
             }`}
           >
             Deposit
@@ -213,7 +213,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
             className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
               activeTab === 'withdraw'
                 ? 'bg-blue-200 dark:bg-blue-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                : 'bg-secondary text-muted-foreground hover:bg-accent'
             }`}
           >
             Withdraw
@@ -222,9 +222,9 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
 
         {/* Amount Input */}
         <div className="mb-4">
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+          <div className="bg-muted rounded-xl p-4">
             <div className="flex justify-between mb-2">
-              <label className="text-sm text-gray-600 dark:text-gray-300">
+              <label className="text-sm text-muted-foreground">
                 {activeTab === 'deposit' ? 'Deposit Amount' : 'Withdraw Amount'}
               </label>
               <button className="text-sm text-blue-600 dark:text-blue-400">
@@ -239,7 +239,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
                 placeholder="0.0"
                 className="flex-1 text-xl font-semibold bg-transparent outline-none dark:text-white"
               />
-              <div className="bg-white dark:bg-gray-600 border dark:border-gray-500 rounded-lg px-3 py-2 font-semibold text-sm dark:text-white">
+              <div className="bg-background border border-border rounded-lg px-3 py-2 font-semibold text-sm">
                 LP
               </div>
             </div>
@@ -404,21 +404,21 @@ export default function FarmPage(){
 function OverallAStats({farmData = {}}){
   return(
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-      <div className="bg-blue-100 dark:bg-gray-800 rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
+      <div className="bg-blue-100 dark:bg-card rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
         <div className="text-sm opacity-90 mb-1">Total Value Locked</div>
         <div className="text-3xl font-bold">
           {formatUSD(farmData.totalValueLocked)}
         </div>
       </div>
 
-      <div className="bg-blue-100 dark:bg-gray-800 rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
+      <div className="bg-blue-100 dark:bg-card rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
         <div className="text-sm opacity-90 mb-1">Active Farms</div>
         <div className="text-3xl font-bold">
           {farmData.pools.length}
         </div>
       </div>
 
-      <div className="bg-blue-100 dark:bg-gray-800 rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
+      <div className="bg-blue-100 dark:bg-card rounded-lg shadow-lg p-6 text-gray-700 dark:text-blue-100">
         <div className="text-sm opacity-90 mb-1">Active Users</div>
         <div className="text-3xl font-bold">
           {formatNumber(farmData.activeUsers)}
@@ -435,7 +435,7 @@ function ErrorModel({error}){
     <div className="container py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 dark:text-white">Farm</h1>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-12 text-center">
+        <div className="bg-card rounded-lg shadow-lg p-12 text-center">
           <svg className="w-16 h-16 text-red-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -459,7 +459,7 @@ function LoadingModel(){
     <div className="container py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 dark:text-white">Farm</h1>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-12 text-center">
+        <div className="bg-card rounded-lg shadow-lg p-12 text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-400">Loading farm pools...</p>
         </div>
@@ -470,7 +470,7 @@ function LoadingModel(){
 
 function InfoSection(){
   return(
-    <div className="mt-6 p-4 bg-card dark:bg-gray-800 rounded-lg dark:border dark:border-gray-700">
+    <div className="mt-6 p-4 bg-card rounded-lg dark:border dark:border-border">
       <h3 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">How Farming Works</h3>
       <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
         <li>• Deposit LP tokens to start earning DRT rewards</li>

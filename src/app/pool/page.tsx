@@ -77,7 +77,7 @@ export default function PoolPage(){
       />
 
       {/* Main Card */}
-      <div className="bg-card dark:bg-gray-800 rounded-2xl shadow-lg p-6 dark:border dark:border-gray-700">
+      <div className="bg-card rounded-2xl shadow-lg p-6 dark:border dark:border-border">
         {/* Mode Selector */}
         <div className="flex gap-2 mb-6">
           <button
@@ -137,7 +137,7 @@ export default function PoolPage(){
 function InfoSection(){
   const t = useTranslations('Pool.info')
   return(
-    <div className="mt-6 p-4 bg-card dark:bg-gray-800 rounded-lg dark:border dark:border-gray-700">
+    <div className="mt-6 p-4 bg-card rounded-lg dark:border dark:border-border">
       <h3 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">{t('title')}</h3>
       <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
         <li>• {t('first')}</li>
