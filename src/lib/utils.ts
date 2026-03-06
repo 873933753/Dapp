@@ -160,3 +160,56 @@ export function formatNumber(value) {
   const num = typeof value === 'string' ? parseFloat(value) : value
   return num.toLocaleString('en-US', { maximumFractionDigits: 2 })
 }
+
+
+// swap
+export function bigIntSqrt(n) {
+  // 边界值处理：0或1的平方根就是自身
+  if (n < 0n) throw new Error('流动性计算错误：储备量乘积不能为负数');
+  if (n === 0n || n === 1n) return n;
+
+  // 二分法求解（BigInt 运算，全程无精度丢失）
+  let low = 1n;
+  let high = n;
+  let result = 0n;
+
+  while (low <= high) {
+    const mid = (low + high) / 2n; // BigInt 整数除法
+    const midSquared = mid * mid;  // 计算中间值的平方
+
+    if (midSquared === n) {
+      // 刚好是完全平方数，直接返回
+      return mid;
+    } else if (midSquared < n) {
+      // 中间值平方小于目标值，记录当前值并往更大方向找
+      result = mid;
+      low = mid + 1n;
+    } else {
+      // 中间值平方大于目标值，往更小方向找
+      high = mid - 1n;
+    }
+  }
+
+  // 返回最接近的向下取整结果（满足LP计算精度要求）
+  return result;
+}
+
+
+export function calculateLiquidity(reserveA, reserveB, decimals) {
+  // 1. 校验储备量不为0（无流动性时返回0）
+  if (reserveA === 0n || reserveB === 0n) return '0.00';
+
+  // 2. 计算两种代币储备量的乘积（BigInt 运算）
+  const reserveProduct = reserveA * reserveB;
+
+  // 3. 计算平方根（用手写的bigIntSqrt，无依赖）
+  const liquidityRaw = bigIntSqrt(reserveProduct);
+
+  // 4. 把BigInt类型的LP原始值转为人类可读数值（纯原生JS处理精度）
+  // 原理：10^decimals 是精度系数，比如 18位精度 → 1e18
+  const precision = BigInt(10 ** decimals);
+  const liquidityHumanNum = Number(liquidityRaw) / Number(precision);
+
+  // 5. 格式化保留2位小数（前端展示用）
+  return liquidityHumanNum.toFixed(2);
+}

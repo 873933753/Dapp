@@ -16,7 +16,11 @@ import { ChevronDown } from "lucide-react";
 import { ERC20_ABI, SWAP_ABI } from "@/lib/abis";
 // import { formatUnits, parseUnits } from "viem";
 import { handleInputChange, handleKeyDown, handlePaste, formatUnits, parseUnits } from "@/lib/utils";
+/* components */
 import ApproveButton from "@/components/ApproveButton";
+import InfoSection from './components/InfoSection';
+import PriceInfo from './components/PriceInfo';
+import SlippageModal from './components/SlippageModal';
 
 
 function CustomConnectBtn() {
@@ -48,30 +52,37 @@ function CustomConnectBtn() {
   );
 }
 
+const tokenSymbolTKA = 'TKA'
+const slippagePresets = [0.1, 0.5, 1.0] 
 export default function SwapPage(){
   const t = useTranslations('Swap')
   const { address:myAddress,isConnected } = useAccount()
-  const [ tokenIn, setTokenIn ] = useState('TKA')
+  const [ tokenIn, setTokenIn ] = useState(tokenSymbolTKA)
   const [ tokenOut, setTokenOut ] = useState('')
   const [ amountIn, setAmountIn ] = useState('0')
   const [ amountOut, setAmountOut ] = useState('0')
   const chainId = useChainId()
   // DRT 和 USDC合约未部署，所以用的是mock数据
   const [ isMockMode, setIsMockMode ] = useState(false)
-
-  const slippagePresets = [0.1, 0.5, 1.0]
   const [ slippage, setSlippage ] = useState(slippagePresets[1]) // 滑点默认0.5%
   const [ showSlippageModal, setShowSlippageModal] = useState(false)
 
-  const tokenInData = {
+
+  const tokenInData = useMemo(() => ({
     ...TOKENS[tokenIn],
     //tokenIn的代币合约地址
     address:getTokenAddress(chainId,tokenIn)
-  }
-  const tokenOutData = {
+  }),[chainId,tokenIn])
+
+  /* 
+  否则依赖 - tokenOutData每次都会执行
+  useMemo = 缓存计算结果（对象、数组、复杂计算）
+  useCallback = 缓存函数引用（其实就是 useMemo(() => fn, deps) 的语法
+  */
+  const tokenOutData = useMemo(() => ({
     ...TOKENS[tokenOut],
     address:getTokenAddress(chainId,tokenOut)
-  }
+  }),[chainId,tokenOut])
 
   const handleSwitchIn = (sympol:string) => {
     if( tokenOut === sympol ){
@@ -87,13 +98,15 @@ export default function SwapPage(){
     setTokenOut(sympol)
   }
 
+  const [error, setError] = useState<string | null>(null)
   const handleAmountIn = (e:React.ChangeEvent<HTMLInputElement>) => {
     let newValue = handleInputChange(e)
     // 超过余额
     if(parseUnits(newValue,tokenInData.decimals) > tokenBalance){
-      alert('余额不足')
-      newValue = formatUnits(tokenBalance,tokenInData.decimals)
+      setError('余额不足')
+      return  // 直接 return，不改值
     }
+    setError(null)
     setAmountIn(newValue)
   }
 
@@ -103,10 +116,8 @@ export default function SwapPage(){
   }
 
   const switchTokens = () => {
-    const tokenA = tokenIn
-    const tokenB = tokenOut
-    setTokenIn(tokenB)
-    setTokenOut(tokenA)
+    setTokenIn(tokenOut)
+    setTokenOut(tokenIn)
     // 不仅币种需要交换，数值也需要交换，amountOut请求合约得出
     setAmountIn(amountOut)
     setAmountOut('')
@@ -170,9 +181,9 @@ export default function SwapPage(){
   })
 
   //授权成功回调函数
-  const handleApproved = () => {
+  const handleApproved = useCallback(() => {
     console.log('Token approved, ready to swap')
-  }
+  },[])
 
   useEffect(() => {
     const getQuote = async () => {
@@ -201,14 +212,14 @@ export default function SwapPage(){
     if(!reserves || !amountIn){
       return
     }
-    const reserveValue = Number(reserves[tokenIn === 'TKA' ? 0 : 1])
+    const reserveValue = Number(reserves[tokenIn === tokenSymbolTKA ? 0 : 1])
     const amountInNum = parseFloat(amountIn)
     const impact = ((amountInNum / (reserveValue/1e18)) * 100).toFixed(2)
     return impact
   },[reserves,amountIn,tokenIn])
 
  /* swap */
-  const { data: swapHash, writeContract: swap, isPending: isSwaping } = useWriteContract()
+  const { data: swapHash, writeContract: swap, isPending: isSwapping } = useWriteContract()
   const { isLoading: isSwapConfirming, isSuccess: isSwapSuccess } = useWaitForTransactionReceipt({
     hash:swapHash
   })
@@ -223,7 +234,7 @@ export default function SwapPage(){
     functionName: 'remainingMintAmount',
     args: myAddress ? [myAddress] : undefined,
     query:{
-     enabled: Boolean(myAddress && tokenIn === 'TKA' && tokenInData.address) 
+     enabled: Boolean(myAddress && tokenIn === tokenSymbolTKA && tokenInData.address) 
     }
   })
 
@@ -243,7 +254,7 @@ export default function SwapPage(){
   // 领取成功后刷新余额
   useEffect(() => {
     if (isMintSuccess) tokenBalanceRefetch()
-  }, [isMintSuccess])
+  }, [isMintSuccess,tokenBalanceRefetch])
   
   //发起swap
   const handleSwap = async() => {
@@ -255,10 +266,7 @@ export default function SwapPage(){
         address: swapAddress as `0x${string}`,
         abi: SWAP_ABI,
         functionName: 'swap',
-        args: [tokenInData?.address as `0x${string}`, parseUnits(amountIn,18)], // 确保 args 必传且合法
-        query:{
-          enabled: Boolean(amountIn && tokenInData?.address)
-        }
+        args: [tokenInData?.address as `0x${string}`, parseUnits(amountIn,18)] // 确保 args 必传且合法
       } as any,{
         onError:(err) => {
           console.log('err--',err)
@@ -311,7 +319,7 @@ export default function SwapPage(){
                     {t('balance')}: {tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
                   </span>
                   {/* 测试网水龙头：TKA 余额为 0 且合约允许领取时显示 */}
-                  {tokenIn === 'TKA' && (!tokenBalance || tokenBalance === 0n) && remainingMintAmount > 0n && (
+                  {tokenIn === tokenSymbolTKA && (!tokenBalance || tokenBalance === 0n) && remainingMintAmount > 0n && (
                     <button
                       onClick={handleMintTKA}
                       disabled={isMinting || isMintConfirming}
@@ -331,7 +339,7 @@ export default function SwapPage(){
               type="number"
               placeholder="0"
               className="text-2xl font-bold outline-none bg-transparent w-full appearance-none"
-              onChange={(e) => handleAmountIn(e)}
+              onChange={handleAmountIn}
               onKeyDown={handleKeyDown}
               onPaste={handlePaste}
               value={amountIn}
@@ -450,16 +458,18 @@ export default function SwapPage(){
                   !amountIn || !amountOut ||
                   parseFloat(amountIn) <= 0 ||
                   parseFloat(amountOut) <= 0 ||
-                  isSwapConfirming || isSwaping
+                  isSwapConfirming || isSwapping
                 }
                 onClick={ handleSwap }
                 className="bg-[var(--custom-btn-1)] border-blue-500 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-white"
               >
-                { isSwaping || isSwapConfirming ? 'Swaping...':t('title') }
+                { isSwapping || isSwapConfirming ? 'Swaping...':t('title') }
               </button>
             </ApproveButton>
           )
         }
+
+        {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
 
         {/* Success Message */}
         {isSwapSuccess && (
@@ -493,216 +503,4 @@ export default function SwapPage(){
   )
 }
 
-/* Price Info */
-function PriceInfo({tokenIn,tokenOut,amountIn, amountOut ,reserves, priceImpact, slippage, minAmountOut }){
-  const t = useTranslations('Swap.info')
-  return(
-    <div className="mb-4 space-y-2 mt-4">
-      <div className="p-3 bg-blue-50 dark:bg-slate-800 rounded-lg space-y-2">
-        <div className="flex justify-between text-sm">
-          {/* 汇率：amountOut/amountIn -In能换多少out */}
-          <span className="text-gray-600 dark:text-gray-300">{t("Rate")}</span>
-          <span className="font-semibold">
-            1 {tokenIn} = {(parseFloat(amountOut) / parseFloat(amountIn)).toFixed(4)} {tokenOut}
-          </span>
-        </div>
-        {reserves && (
-          <>
-            <div className="flex justify-between text-sm">
-              {/* 流动性：(reserves[0] + reserves[1])/1e18 * 1.5 */}
-              <span className="text-gray-600 dark:text-gray-300">{t("Liquidity")}</span>
-              <span className="font-semibold">
-                {/* ${((Number(reserves[0]) + Number(reserves[1])) / 1e18 * 1.5).toFixed(2)} */}
-                {calculateLiquidity(reserves[0],reserves[1],18)} LP
-              </span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-300">{t('Price Impact')}</span>
-              {/* 价格影响-priceImpact (amountIn/reserves[0])/ 1e18) * 100 or amountIn/reserves[1]  */}
-              <span className={`font-semibold ${parseFloat(priceImpact) > 5 ? 'text-red-600' : parseFloat(priceImpact) > 2 ? 'text-yellow-600' : 'text-green-600'}`}>
-                {priceImpact}%
-              </span>
-            </div>
-          </>
-        )}
-        <div className="flex justify-between text-sm">
-          {/* 滑点数 */}
-          <span className="text-gray-600 dark:text-gray-300">{t('Slippage Tolerance')}</span>
-          <span className="font-semibold">{slippage}%</span>
-        </div>
-        <div className="flex justify-between text-sm">
-          {/* 最少收到: amountOut - (1 - slippage / 100) */}
-          <span className="text-gray-600 dark:text-gray-300">{t('Minimum Received')}</span>
-          <span className="font-semibold">{minAmountOut} {tokenOut}</span>
-        </div>
-      </div>
-      {parseFloat(priceImpact) > 5 && (
-        <div className="p-2 bg-red-50 dark:bg-red-900 border border-red-200 dark:border-red-700 rounded-lg">
-          <p className="text-xs text-red-800 dark:text-red-200">⚠️ {t('warning')}.</p>
-        </div>
-      )}
-    </div>
-  )
-}
 
-
-/* Info Section */
-function InfoSection(){
-  const t = useTranslations('Swap')
-  return(
-    <div className="mt-6 p-4 bg-card dark:bg-gray-800 rounded-lg dark:border dark:border-gray-700">
-      <h3 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">{t('info.title')}</h3>
-      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-        <li>• {t('info.first')}</li>
-        <li>• {t('info.second')}</li>
-        <li>• {t('info.third')}</li>
-        <li>• {t('info.last')}</li>
-      </ul>
-    </div>
-  )
-}
-
-/* slippageModal */
-function SlippageModal({slippagePresets,setShowSlippageModal,setSlippage,slippage}){
-  const t = useTranslations('Swap.slippage')
-  const [customSlippage, setCustomSlippage] = useState('')
-  const handleCustomSlippage = (value) => {
-    setCustomSlippage(value)
-    const numValue = parseFloat(value)
-    if (!isNaN(numValue) && numValue >= 0 && numValue <= 50) {
-      setSlippage(numValue)
-    }
-  }
-
-  const handleSlippagePreset = (value) => {
-    setSlippage(value)
-    setCustomSlippage('')
-  }
-  return(
-    <div className="fixed inset-0 bg-black/50 dark:bg-black/75 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold dark:text-white">{t('setting')}</h2>
-          <button
-            onClick={() => setShowSlippageModal(false)}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-          >
-            <svg className="w-6 h-6 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-semibold mb-3 dark:text-white">{t('slippage')}</label>
-            <div className="flex gap-2 mb-3">
-              {slippagePresets.map((preset) => (
-                <button
-                  key={preset}
-                  onClick={() => handleSlippagePreset(preset)}
-                  className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
-                    slippage === preset && !customSlippage
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                  }`}
-                >
-                  {preset}%
-                </button>
-              ))}
-            </div>
-            <div className="relative">
-              <input
-                type="number"
-                value={customSlippage}
-                onChange={(e) => handleCustomSlippage(e.target.value)}
-                placeholder={t("custom")}
-                step="0.1"
-                min="0"
-                max={50}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-8"
-              />
-              <span className="absolute right-3 top-2 text-gray-500 dark:text-gray-400">%</span>
-            </div>
-            {customSlippage && parseFloat(customSlippage) > 5 && (
-              <p className="mt-2 text-sm text-yellow-600 dark:text-yellow-400">⚠️ High slippage may result in unfavorable rates</p>
-            )}
-            {customSlippage && parseFloat(customSlippage) > 15 && (
-              <p className="mt-2 text-sm text-red-600 dark:text-red-400">⚠️ Very high slippage! You may lose significant value.</p>
-            )}
-          </div>
-
-          <div className="pt-4 border-t dark:border-gray-700">
-            <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-3">
-              <p className="text-sm text-gray-700 dark:text-blue-100">
-                <strong>{t('title')}</strong>
-              </p>
-              <p className="text-xs text-gray-600 dark:text-blue-200 mt-1">
-                {t('explain')}
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={() => setShowSlippageModal(false)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
-          >
-            {t('done')}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-
-function bigIntSqrt(n) {
-  // 边界值处理：0或1的平方根就是自身
-  if (n < 0n) throw new Error('流动性计算错误：储备量乘积不能为负数');
-  if (n === 0n || n === 1n) return n;
-
-  // 二分法求解（BigInt 运算，全程无精度丢失）
-  let low = 1n;
-  let high = n;
-  let result = 0n;
-
-  while (low <= high) {
-    const mid = (low + high) / 2n; // BigInt 整数除法
-    const midSquared = mid * mid;  // 计算中间值的平方
-
-    if (midSquared === n) {
-      // 刚好是完全平方数，直接返回
-      return mid;
-    } else if (midSquared < n) {
-      // 中间值平方小于目标值，记录当前值并往更大方向找
-      result = mid;
-      low = mid + 1n;
-    } else {
-      // 中间值平方大于目标值，往更小方向找
-      high = mid - 1n;
-    }
-  }
-
-  // 返回最接近的向下取整结果（满足LP计算精度要求）
-  return result;
-}
-
-
-function calculateLiquidity(reserveA, reserveB, decimals) {
-  // 1. 校验储备量不为0（无流动性时返回0）
-  if (reserveA === 0n || reserveB === 0n) return '0.00';
-
-  // 2. 计算两种代币储备量的乘积（BigInt 运算）
-  const reserveProduct = reserveA * reserveB;
-
-  // 3. 计算平方根（用手写的bigIntSqrt，无依赖）
-  const liquidityRaw = bigIntSqrt(reserveProduct);
-
-  // 4. 把BigInt类型的LP原始值转为人类可读数值（纯原生JS处理精度）
-  // 原理：10^decimals 是精度系数，比如 18位精度 → 1e18
-  const precision = BigInt(10 ** decimals);
-  const liquidityHumanNum = Number(liquidityRaw) / Number(precision);
-
-  // 5. 格式化保留2位小数（前端展示用）
-  return liquidityHumanNum.toFixed(2);
-}
