@@ -282,7 +282,6 @@ export default function SwapPage(){
     setAmountOut(0)
   }
   
-  console.log('squash1')
 
   return(
     <div className="container max-w-lg mx-auto py-6 md:py-12 px-4">
