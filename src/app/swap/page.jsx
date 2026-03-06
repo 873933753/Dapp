@@ -282,6 +282,7 @@ export default function SwapPage(){
     setAmountOut(0)
   }
 
+  console.log('修改1')
   
 
   return(
