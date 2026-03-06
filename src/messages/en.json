@@ -29,6 +29,8 @@
   "to":"Buy",
   "wallet":"Collect Wallet",
   "balance":"balance",
+    "claimTka":"Claim 10 TKA (Testnet)",
+    "claiming":"Claiming...",
   "swaping":"Swaping...",
   "select":"Select token",
   "info":{

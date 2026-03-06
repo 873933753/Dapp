@@ -316,7 +316,7 @@ export default function SwapPage(){
                       disabled={isMinting || isMintConfirming}
                       className="text-xs px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800/60 transition-colors disabled:opacity-50 cursor-pointer"
                     >
-                      {isMinting || isMintConfirming ? '领取中...' : ' 领取 10 TKA（测试网）'}
+                      {isMinting || isMintConfirming ? t('claiming') : t('claimTka')}
                     </button>
                   )}
                 </div>

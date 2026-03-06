@@ -432,7 +432,7 @@ function OverallAStats({farmData = {}}){
 /* error */
 function ErrorModel({error}){
   return(
-    <div className="container py-12">
+    <div className="container py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 dark:text-white">Farm</h1>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-12 text-center">
@@ -456,7 +456,7 @@ function ErrorModel({error}){
 /* loading */
 function LoadingModel(){
   return(
-    <div className="container py-12">
+    <div className="container py-12 mx-auto">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-8 dark:text-white">Farm</h1>
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-12 text-center">

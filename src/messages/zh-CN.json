@@ -29,6 +29,8 @@
   "to":"购买",
   "wallet":"连接钱包",
   "balance":"余额",
+  "claimTka":"领取 10 TKA（测试网）",
+  "claiming":"领取中...",
   "swaping":"交换中...",
   "select":"选择代币",
   "info":{
