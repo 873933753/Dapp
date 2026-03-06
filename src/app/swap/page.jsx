@@ -282,8 +282,7 @@ export default function SwapPage(){
     setAmountOut(0)
   }
 
-  console.log('修改1')
-  console.log('修改2')
+  console.log('修改1')git 
   
 
   return(
