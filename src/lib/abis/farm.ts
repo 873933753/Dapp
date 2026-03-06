@@ -85,4 +85,5 @@ export const FARM_ABI = [
     inputs: [],
     outputs: [{ name: '', type: 'uint256' }],
   },
-]
+] as const
+ 

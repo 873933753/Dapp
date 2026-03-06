@@ -157,4 +157,4 @@ export const SWAP_ABI = [
       { name: 'amountOut', type: 'uint256', indexed: false },
     ],
   },
-]
+] as const

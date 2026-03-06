@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { TOKENS, getTokenAddress, getProtocolAddress } from "@/lib/constants";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { ERC20_ABI, SWAP_ABI } from "@/lib/abis";
 // import { formatUnits, parseUnits } from "viem";
@@ -29,11 +29,10 @@ function CustomConnectBtn() {
         chain,          // 当前链信息
         openAccountModal, // 打开账户弹窗的方法
         openConnectModal, // 打开连接弹窗的方法
-        authenticated,   // 是否已认证（连接钱包）
         mounted,         // 组件是否挂载完成
       }) => {
         // 组件挂载完成前的加载状态
-        const ready = mounted && authenticated;
+        const ready = mounted;
         const isConnected = ready && account && chain;
         return (
           <button
@@ -74,21 +73,21 @@ export default function SwapPage(){
     address:getTokenAddress(chainId,tokenOut)
   }
 
-  const handleSwitchIn = (sympol) => {
+  const handleSwitchIn = (sympol:string) => {
     if( tokenOut === sympol ){
       setTokenOut('')
     }
     setTokenIn(sympol)
   }
 
-  const handleSwitchOut = (sympol) => {
+  const handleSwitchOut = (sympol:string) => {
     if( tokenIn === sympol ){
       setTokenIn('')
     }
     setTokenOut(sympol)
   }
 
-  const handleAmountIn = (e) => {
+  const handleAmountIn = (e:React.ChangeEvent<HTMLInputElement>) => {
     let newValue = handleInputChange(e)
     // 超过余额
     if(parseUnits(newValue,tokenInData.decimals) > tokenBalance){
@@ -98,7 +97,7 @@ export default function SwapPage(){
     setAmountIn(newValue)
   }
 
-  const handleAmountOut = (e) => {
+  const handleAmountOut = (e:React.ChangeEvent<HTMLInputElement>) => {
     const newValue = handleInputChange(e)
     setAmountOut(newValue)
   }
@@ -145,7 +144,9 @@ export default function SwapPage(){
     address: swapAddress,
     abi: SWAP_ABI,
     functionName: 'getReserves',
-    enabled: Boolean(swapAddress)
+    query:{
+      enabled: Boolean(swapAddress)
+    }
   })
 
   // 读合约获取getAmountOut
@@ -155,7 +156,9 @@ export default function SwapPage(){
     functionName: 'getAmountOut',
     args: amountIn && tokenInData ? [ tokenInData.address, parseUnits(amountIn, tokenInData.decimals)] : undefined,
     // 合约地址有效 && amountIn有输入 && 输入金额是大于 0 的有效数字 才读取合约--避免无效请求，减少不必要的链上交互，降低前端资源消耗
-    enabled: Boolean(swapAddress && amountIn && parseFloat(amountIn) > 0)
+    query:{
+      enabled: Boolean(swapAddress && amountIn && parseFloat(amountIn) > 0)
+    }
   })
 
   //获取余额
@@ -210,13 +213,6 @@ export default function SwapPage(){
     hash:swapHash
   })
 
-  // 监听交易成功
-  useEffect(() => {
-    if (isSwapSuccess) {
-      handleSwapSuccess() // 通知父组件刷新
-    }
-  }, [isSwapSuccess])
-
   /* 测试网水龙头：TKA 余额为 0 时可领取 10 TKA */
   const MINT_AMOUNT = 10n * 10n ** 18n // 10 TKA（18 位小数）
 
@@ -226,7 +222,9 @@ export default function SwapPage(){
     abi: ERC20_ABI,
     functionName: 'remainingMintAmount',
     args: myAddress ? [myAddress] : undefined,
-    enabled: Boolean(myAddress && tokenIn === 'TKA' && tokenInData.address),
+    query:{
+     enabled: Boolean(myAddress && tokenIn === 'TKA' && tokenInData.address) 
+    }
   })
 
   const { data: mintHash, writeContract: mintTKA, isPending: isMinting } = useWriteContract()
@@ -239,7 +237,7 @@ export default function SwapPage(){
       abi: ERC20_ABI,
       functionName: 'mint',
       args: [MINT_AMOUNT],
-    })
+    } as any)
   }
 
   // 领取成功后刷新余额
@@ -254,12 +252,14 @@ export default function SwapPage(){
     }   
     try {
       swap({
-        address: swapAddress,
+        address: swapAddress as `0x${string}`,
         abi: SWAP_ABI,
         functionName: 'swap',
-        args: [tokenInData?.address, parseUnits(amountIn,18)], // 确保 args 必传且合法
-        enabled: Boolean(amountIn && tokenInData?.address)
-      },{
+        args: [tokenInData?.address as `0x${string}`, parseUnits(amountIn,18)], // 确保 args 必传且合法
+        query:{
+          enabled: Boolean(amountIn && tokenInData?.address)
+        }
+      } as any,{
         onError:(err) => {
           console.log('err--',err)
         }
@@ -269,18 +269,20 @@ export default function SwapPage(){
     }
   }
 
-  //刷新余额
-  useEffect(() => {
-    tokenBalanceRefetch()
-  },[tokenBalance,tokenInData])
-
-  // swap成功得回调
-  const handleSwapSuccess = () => {
+  // swap成功得回调 - handleSwapSuccess 引用不变 → useEffect 不会重复执行
+  const handleSwapSuccess = useCallback(() => {
     //刷新余额
     tokenBalanceRefetch()
-    setAmountIn(0)
-    setAmountOut(0)
-  }
+    setAmountIn('0')
+    setAmountOut('0')
+  },[tokenBalanceRefetch])
+
+    // 监听交易成功
+  useEffect(() => {
+    if (isSwapSuccess) {
+      handleSwapSuccess() // 通知父组件刷新
+    }
+  }, [isSwapSuccess,handleSwapSuccess])
   
 
   return(
@@ -342,12 +344,12 @@ export default function SwapPage(){
                     <ChevronDown className={`h-4 w-4 opacity-100 ${!tokenIn?'text-white':''}`} />
                   </div>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className=''>
                   <SelectGroup>
                     {
                       Object.keys(TOKENS).map(symbol => {
                         return(
-                          <SelectItem key={symbol} value={symbol}>
+                          <SelectItem key={symbol} value={symbol} className=''>
                             {symbol}
                           </SelectItem>
                         )
@@ -393,13 +395,13 @@ export default function SwapPage(){
                     <ChevronDown className={`h-4 w-4 opacity-100 ${!tokenOut?'text-white':''}`} />
                   </div>
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className=''>
                   <SelectGroup>
                     {
                       /* 过滤tokenIn，使得两个币种不一样 */
                       Object.keys(TOKENS).filter(s => s !== tokenIn).map(symbol => {
                         return(
-                          <SelectItem key={symbol} value={symbol}>
+                          <SelectItem key={symbol} value={symbol} className=''>
                             {symbol}
                           </SelectItem>
                         )
@@ -412,7 +414,7 @@ export default function SwapPage(){
           </div>
         </div>
         {
-          amountOut!=0 && 
+          amountOut !== '0' && amountOut !== '' && 
           <PriceInfo
             tokenIn={tokenIn}
             tokenOut = {tokenOut} 

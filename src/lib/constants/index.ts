@@ -21,7 +21,14 @@ export const PROTOCOL_ADDRESSES = {
 }
 
 // 代币配置（包含元数据）
-export const TOKENS = {
+interface TokenInfo {
+  symbol: string
+  name: string
+  decimals: number
+  icon?: string,
+  getAddress: (chainId:number) => string | undefined
+}
+export const TOKENS:Record<string,TokenInfo> = {
   TKA: {
     symbol: 'TKA',
     name: 'Token A',
@@ -49,11 +56,11 @@ export const TOKENS = {
 }
 
 // 辅助函数：获取代币地址
-export function getTokenAddress(chainId, tokenSymbol) {
-  return TOKENS[tokenSymbol]?.getAddress(chainId)
+export function getTokenAddress(chainId: number, tokenSymbol:string) {
+  return TOKENS[tokenSymbol]?.getAddress(chainId) as `0x${string}`
 }
 
 // 辅助函数：获取协议合约地址
-export function getProtocolAddress(chainId, protocol) {
-  return PROTOCOL_ADDRESSES[chainId]?.[protocol]
+export function getProtocolAddress(chainId:number, protocol:string) {
+  return PROTOCOL_ADDRESSES[chainId]?.[protocol] as `0x${string}`
 }
