@@ -56,7 +56,8 @@ const tokenSymbolTKA = 'TKA'
 const slippagePresets = [0.1, 0.5, 1.0] 
 export default function SwapPage(){
   const t = useTranslations('Swap')
-  const { address:myAddress,isConnected } = useAccount()
+  /* status: 'connecting' | 'reconnecting' | 'connected' | 'disconnected' */
+  const { address:myAddress,isConnected,status } = useAccount()
   const [ tokenIn, setTokenIn ] = useState(tokenSymbolTKA)
   const [ tokenOut, setTokenOut ] = useState('')
   const [ amountIn, setAmountIn ] = useState('0')
@@ -66,6 +67,26 @@ export default function SwapPage(){
   const [ isMockMode, setIsMockMode ] = useState(false)
   const [ slippage, setSlippage ] = useState(slippagePresets[1]) // 滑点默认0.5%
   const [ showSlippageModal, setShowSlippageModal] = useState(false)
+
+  // 解决钱包连接按钮闪烁问题
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
+
+  // walletReady：等 wagmi 状态确定后再展示钱包相关 UI
+  // 防止 mounted=true 但 wagmi 还没开始 reconnect 时闪现 Connect 按钮
+  const [walletReady, setWalletReady] = useState(false)
+  useEffect(() => {
+    if (status === 'connected') {
+      setWalletReady(true) // 已连接，立即就绪
+    } else if (status === 'reconnecting' || status === 'connecting') {
+      setWalletReady(false) // 正在重连，继续等
+    } else {
+      // status === 'disconnected'，可能是初始状态也可能是真正断开
+      // 等 300ms 让 wagmi 有时间启动 reconnect
+      const timer = setTimeout(() => setWalletReady(true), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [status])
 
 
   const tokenInData = useMemo(() => ({
@@ -291,6 +312,19 @@ export default function SwapPage(){
       handleSwapSuccess() // 通知父组件刷新
     }
   }, [isSwapSuccess,handleSwapSuccess])
+
+  if (!mounted) {
+    return (
+      <div className="container max-w-lg mx-auto py-6 md:py-12 px-4">
+        <div className="shadow-lg rounded-xl p-6 bg-card dark:border dark:border-border animate-pulse">
+          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-20 mb-6" />
+          <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-2xl mb-2" />
+          <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-2xl mb-4" />
+          <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg mt-6" />
+        </div>
+      </div>
+    )
+  }
   
 
   return(
@@ -313,7 +347,7 @@ export default function SwapPage(){
           <div className="flex justify-between text-l">
             <span>{t('from')}</span>
             {
-              isConnected && tokenIn && (
+              mounted && isConnected && tokenIn && (
                 <div className="flex flex-col items-end gap-1">
                   <span className="text-custom-primary">
                     {t('balance')}: {tokenBalance ? Number(formatUnits(tokenBalance, tokenInData.decimals)).toFixed(4) : 0} {tokenIn}
@@ -434,8 +468,10 @@ export default function SwapPage(){
             minAmountOut={minAmountOut}
           />
         }
-        {
-          !isConnected ? (
+        { // mounted=false 或 wagmi 尚未确定连接状态，显示占位
+          !mounted || !walletReady ? (
+            <div className="w-full py-3 mt-6 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse h-12" />
+          ) : !isConnected ? (
             <CustomConnectBtn></CustomConnectBtn>
           ) : isMockMode ? (
             <button className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 hover:text-blue-600 hover:bg-blue-200 cursor-pointer">

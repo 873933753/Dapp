@@ -5,6 +5,10 @@
  "Wallet": {
   "button": "Collect Wallet"
  },
+ "Common": {
+  "approveToken": "Approve Token",
+  "approving": "Approving..."
+ },
 "navigation":{
   "Swap":"Swap",
   "Pool":"Pool",

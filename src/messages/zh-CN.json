@@ -2,6 +2,10 @@
  "Basic": {
   "name":"汤"
  },
+ "Common": {
+  "approveToken": "代币授权",
+  "approving": "授权中..."
+ },
  "navigation":{
   "Swap":"交换",
   "Pool":"资金池",
