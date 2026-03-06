@@ -281,9 +281,6 @@ export default function SwapPage(){
     setAmountIn(0)
     setAmountOut(0)
   }
-
-  console.log('修改1')
-  console.log('修改2')
   
 
   return(
