@@ -50,9 +50,9 @@ export default function LocaleSwitcher(){
           onClick={() => handleSwitch(locale === 'en' ? 'zh-CN' : 'en')}
           aria-label={locale === 'en' ? '切换到中文' : 'Switch to English'}
           title={locale === 'en' ? '切换到中文' : 'Switch to English'}
-          className={`p-2 rounded-lg bg-gray-200 flex items-center justify-center text-sm font-semibold cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${locale === 'en' ? 'text-blue-500' : 'text-gray-600 hover:text-gray-800'} dark:bg-gray-700 text-gray-800 dark:text-gray-200`}
+          className={`p-2 rounded-md bg-secondary flex items-center justify-center cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${locale === 'en' ? 'text-blue-500' : 'text-muted-foreground hover:text-foreground'} text-foreground`}
         >
-          <span className="select-none w-5 h-5">{locale === 'en' ? 'en' : 'zh'}</span>
+          <span className="select-none w-5 h-5 leading-5 text-center text-sm font-semibold">{locale === 'en' ? 'en' : 'zh'}</span>
         </button>
       {/* </div> */}
     </div>

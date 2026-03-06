@@ -21,7 +21,7 @@ export default function CustomConnectBtn({type='Swap'}) {
           <button
             onClick={openConnectModal}
             disabled={!mounted}
-            className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-wider rounded-lg mt-6 hover:text-blue-600 hover:bg-blue-200 cursor-pointer"
+            className="btn-action w-full py-2 text-lg tracking-wider rounded-lg mt-6"
           >
             {t('wallet')}
           </button>

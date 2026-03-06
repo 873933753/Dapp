@@ -108,7 +108,7 @@ function ApproveButton({
       // disabled = { !amountIn || !amountOut || isApproving || isConfirming}
       disabled={disabled || isApproving || isConfirming}
       onClick = { handleApprove }
-      className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-400 disabled:text-white">
+      className="btn-action w-full py-2 text-lg tracking-tight rounded-lg mt-6">
       { (isApproving || isConfirming) ? t('approving') : t('approveToken')}
     </button>
   )

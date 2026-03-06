@@ -147,7 +147,7 @@ export default function NavBar(){
           {mounted && !isConnected && (
             <button 
               onClick={handleWalletConnectClick}
-              className="p-2 rounded-md transition-colors duration-200 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              className="p-2 rounded-md transition-colors duration-200 bg-blue-100 dark:bg-blue-600 text-blue-500 dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700"
               title="WalletConnect 扫码连接"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -157,7 +157,7 @@ export default function NavBar(){
           )}
           {/* Wallet button: wrap and scale down on small screens to avoid covering menu */}
           {mounted && (
-          <div className="min-w-0 md:min-w-auto md:transform-none transform scale-90 md:scale-100 md:ml-0 ml-2">
+          <div className="rk-nav-btn min-w-0 md:min-w-auto md:transform-none transform scale-90 md:scale-100 md:ml-0 ml-2">
             <ConnectButton
               label={t('button')}
               showBalance={!isSmallScreen}

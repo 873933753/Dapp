@@ -18,14 +18,14 @@ export default function SlippageModal({slippagePresets,setShowSlippageModal,setS
   }
   return(
     <div className="fixed inset-0 bg-black/50 dark:bg-black/75 flex items-center justify-center z-50 p-4">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl max-w-md w-full p-6">
+      <div className="bg-card rounded-2xl shadow-xl max-w-md w-full p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold dark:text-white">{t('setting')}</h2>
+          <h2 className="text-xl font-bold">{t('setting')}</h2>
           <button
             onClick={() => setShowSlippageModal(false)}
-            className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-1 hover:bg-muted rounded-lg transition-colors"
           >
-            <svg className="w-6 h-6 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -33,7 +33,7 @@ export default function SlippageModal({slippagePresets,setShowSlippageModal,setS
 
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-semibold mb-3 dark:text-white">{t('slippage')}</label>
+            <label className="block text-sm font-semibold mb-3">{t('slippage')}</label>
             <div className="flex gap-2 mb-3">
               {slippagePresets.map((preset) => (
                 <button
@@ -42,7 +42,7 @@ export default function SlippageModal({slippagePresets,setShowSlippageModal,setS
                   className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors ${
                     slippage === preset && !customSlippage
                       ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                      : 'bg-muted text-muted-foreground hover:bg-accent'
                   }`}
                 >
                   {preset}%
@@ -58,9 +58,9 @@ export default function SlippageModal({slippagePresets,setShowSlippageModal,setS
                 step="0.1"
                 min="0"
                 max={50}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-8"
+                className="w-full px-4 py-2 border border-input bg-background rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none pr-8"
               />
-              <span className="absolute right-3 top-2 text-gray-500 dark:text-gray-400">%</span>
+              <span className="absolute right-3 top-2 text-muted-foreground">%</span>
             </div>
             {customSlippage && parseFloat(customSlippage) > 5 && (
               <p className="mt-2 text-sm text-yellow-600 dark:text-yellow-400">⚠️ High slippage may result in unfavorable rates</p>
@@ -70,12 +70,12 @@ export default function SlippageModal({slippagePresets,setShowSlippageModal,setS
             )}
           </div>
 
-          <div className="pt-4 border-t dark:border-gray-700">
+          <div className="pt-4 border-t border-border">
             <div className="bg-blue-50 dark:bg-blue-900 rounded-lg p-3">
-              <p className="text-sm text-gray-700 dark:text-blue-100">
+              <p className="text-sm text-muted-foreground dark:text-blue-100">
                 <strong>{t('title')}</strong>
               </p>
-              <p className="text-xs text-gray-600 dark:text-blue-200 mt-1">
+              <p className="text-xs text-muted-foreground dark:text-blue-200 mt-1">
                 {t('explain')}
               </p>
             </div>

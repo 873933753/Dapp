@@ -12,6 +12,7 @@
   "Farm":"农场",
   "Bridge":"跨链桥",
   "Dashboard":"仪表盘",
+  "IPFS":"IPFS 存储",
   "menu":"菜单"
  },
  "Wallet": {
@@ -25,7 +26,8 @@
   "Pool":"添加/移除流动性并赚取 LP 代币",
   "Farm":"提供流动性并获得收益奖励",
   "API Health":"检查 API 状态",
-  "Dashboard":"仪表盘"
+  "Dashboard":"仪表盘",
+  "IPFS":"上传和检索 IPFS 文件"
  },
  "Swap":{
   "title":"交换",
@@ -110,5 +112,35 @@
       "fifth":"转账时间取决于源链和目标链的确认速度.",
       "sixth":"请勿在转账过程中关闭页面."
    }
+ },
+ "Ipfs":{
+  "title":"IPFS 存储",
+  "subtitle":"上传文件到 IPFS 并管理你的 Pin",
+  "provider":"存储服务商",
+  "ipfsNode":"IPFS 节点",
+  "upload":"上传文件",
+  "dropHint":"点击选择文件或拖拽上传",
+  "uploadLimits":"单文件最大 10 MB · 仅支持图片、PDF、文本、音视频 · 每 15 分钟最多上传 10 次",
+  "uploading":"上传中...",
+  "uploadBtn":"上传到 IPFS",
+  "uploadSuccess":"上传成功！",
+  "viewOnGateway":"在网关查看",
+  "fileList":"已固定文件",
+  "loading":"加载中...",
+  "refresh":"刷新",
+  "noFiles":"暂无已固定文件",
+  "download":"打开",
+  "copyCid":"复制 CID",
+  "copied":"已复制！",
+  "unpin":"取消固定",
+  "unpinning":"取消中...",
+  "unpinConfirm":"确定要取消固定此文件吗？文件可能将无法再被访问。",
+  "info":{
+    "title":"如何使用",
+    "first":"选择存储服务商（Pinata 云服务或本地 IPFS 节点）",
+    "second":"选择文件并点击上传 — 文件将被固定到 IPFS 网络",
+    "third":"每个文件都有唯一的 CID（内容标识符）用于永久寻址",
+    "fourth":"通过 IPFS 网关 URL 查看、下载或共享文件"
+  }
  }
 }

@@ -2,7 +2,7 @@
 
 import '@rainbow-me/rainbowkit/styles.css';
 import {
-  RainbowKitProvider,darkTheme 
+  RainbowKitProvider, darkTheme, lightTheme 
 } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import {
@@ -89,11 +89,16 @@ export default function Web3Provider({children}){
 
   // 获取全局语言状态
   // const { locale } = useLanguageStore();
-  // 适配 RainbowKit 主题（可选，可自定义）
-  const theme = darkTheme({
-    accentColor: 'lab(54.1736% 13.3368 -74.6839)',
-    accentColorForeground: 'white',
-  });
+  // 适配 RainbowKit 主题：跟随亮/暗模式，accentColor 与项目蓝色按钮一致
+  const theme = themeMode === 'dark'
+    ? darkTheme({
+        accentColor: '#2563eb',          // blue-600
+        accentColorForeground: 'white',
+      })
+    : lightTheme({
+        accentColor: '#dbeafe',          // blue-100
+        accentColorForeground: '#3b82f6', // blue-500
+      });
   
   return(
     <WagmiProvider config={wagmiConfig}>

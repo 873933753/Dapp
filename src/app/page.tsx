@@ -38,7 +38,7 @@ function FeatureItem({icon,name,desc,href}){
       <div className="group-hover:text-sky-500 flex flex-col gap-2">
         <div className="text-4xl mb-2">{icon}</div>
         <h3 className="font-bold text-xl">{name}</h3>
-        <p className="text-gray-400">{desc}</p>
+        <p className="text-muted-foreground">{desc}</p>
       </div>
     </a>
   )

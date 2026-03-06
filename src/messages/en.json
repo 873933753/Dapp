@@ -14,8 +14,7 @@
   "Pool":"Pool",
   "Farm":"Farm",
   "Bridge":"Bridge",
-  "Dashboard":"Dashboard",
-  "menu":"Navigation menu"
+  "Dashboard":"Dashboard",  "IPFS":"IPFS",  "menu":"Navigation menu"
  },
  "Home":{
   "title":"Welcome to Hanber's DeFi DApp",
@@ -25,7 +24,8 @@
   "Pool":"Add/Remove liquidity and earn LP tokens",
   "Farm":"Provide liquidity and farm rewards",
   "API Health":"Check API status",
-  "Dashboard":"Dashboard"
+  "Dashboard":"Dashboard",
+  "IPFS":"Upload and retrieve files on IPFS"
  },
  "Swap":{
   "title":"Swap",
@@ -113,5 +113,35 @@
       "fifth":"The transfer time depends on the confirmation speed of the source chain and the target chain.",
       "sixth":"Please do not close the page during the transfer process."
    }
+ },
+ "Ipfs":{
+  "title":"IPFS Storage",
+  "subtitle":"Upload files to IPFS and manage your pins",
+  "provider":"Storage Provider",
+  "ipfsNode":"IPFS Node",
+  "upload":"Upload File",
+  "dropHint":"Click to select a file or drag & drop",
+  "uploadLimits":"Max 10 MB per file · Images, PDF, text, audio, video only · 10 uploads / 15 min",
+  "uploading":"Uploading...",
+  "uploadBtn":"Upload to IPFS",
+  "uploadSuccess":"Upload Successful!",
+  "viewOnGateway":"View on gateway",
+  "fileList":"Pinned Files",
+  "loading":"Loading...",
+  "refresh":"Refresh",
+  "noFiles":"No pinned files yet",
+  "download":"Open",
+  "copyCid":"Copy CID",
+  "copied":"Copied!",
+  "unpin":"Unpin",
+  "unpinning":"Unpinning...",
+  "unpinConfirm":"Are you sure you want to unpin this file? It may become unavailable.",
+  "info":{
+    "title":"How it works",
+    "first":"Select a storage provider (Pinata cloud or local IPFS node)",
+    "second":"Choose a file and click Upload — it will be pinned to IPFS",
+    "third":"Each file gets a unique CID (Content Identifier) for permanent addressing",
+    "fourth":"View, download, or share files using the IPFS gateway URL"
+  }
  }
 }

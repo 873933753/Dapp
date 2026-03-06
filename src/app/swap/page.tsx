@@ -42,7 +42,7 @@ function CustomConnectBtn() {
           <button
             onClick={openConnectModal}
             disabled={!mounted}
-            className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-wider rounded-lg mt-6 hover:text-blue-600 hover:bg-blue-200 cursor-pointer"
+            className="btn-action w-full py-2 text-lg tracking-wider rounded-lg mt-6"
           >
             {t('wallet')}
           </button>
@@ -317,10 +317,10 @@ export default function SwapPage(){
     return (
       <div className="container max-w-lg mx-auto py-6 md:py-12 px-4">
         <div className="shadow-lg rounded-xl p-6 bg-card dark:border dark:border-border animate-pulse">
-          <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-20 mb-6" />
-          <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-2xl mb-2" />
-          <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-2xl mb-4" />
-          <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg mt-6" />
+          <div className="h-8 bg-muted rounded w-20 mb-6" />
+          <div className="h-32 bg-muted rounded-2xl mb-2" />
+          <div className="h-32 bg-muted rounded-2xl mb-4" />
+          <div className="h-12 bg-muted rounded-lg mt-6" />
         </div>
       </div>
     )
@@ -334,16 +334,16 @@ export default function SwapPage(){
           <h2 className="font-bold text-2xl">{t('title')}</h2>
           <button 
             onClick={() => setShowSlippageModal(true)}
-            className="p-2 hover:bg-gray-200 rounded-xl transition-colors cursor-pointer group"
+            className="p-2 hover:bg-muted rounded-xl transition-colors cursor-pointer group"
           >
-            <svg className="w-5 h-5 text-gray-600 group-hover:rotate-45 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-muted-foreground group-hover:rotate-45 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
           </button>
         </div>
         {/* token Input */}
-        <div className={`rounded-2xl px-4 py-6 mt-6 relative ${!tokenIn?'bg-gray-200 dark:bg-gray-700':'bg-card'} border border-border ring-1 ring-border`}>
+        <div className={`rounded-2xl px-4 py-6 mt-6 relative ${!tokenIn?'bg-muted':'bg-card'} border border-border ring-1 ring-border`}>
           <div className="flex justify-between text-l">
             <span>{t('from')}</span>
             {
@@ -404,16 +404,16 @@ export default function SwapPage(){
           </div>
           {/* 翻转token */}
           <button
-            className="bg-white dark:bg-gray-700 cursor-pointer border-4 border-gray-100 dark:border-gray-600 rounded-xl p-2 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors absolute left-1/2 -translate-x-1/2 z-10" 
+            className="bg-card cursor-pointer border-4 border-border rounded-xl p-2 hover:bg-accent transition-colors absolute left-1/2 -translate-x-1/2 z-10" 
             onClick={switchTokens}
           >
-            <svg className="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
             </svg>
           </button>
         </div>
         {/* token output */}
-        <div className={`rounded-2xl px-4 py-6 mt-2 relative ${!tokenOut?'bg-gray-200 dark:bg-gray-700':'bg-card'} border border-border ring-1 ring-border`}>
+        <div className={`rounded-2xl px-4 py-6 mt-2 relative ${!tokenOut?'bg-muted':'bg-card'} border border-border ring-1 ring-border`}>
           <div className="flex justify-between text-l">
             <span>{t('to')}</span>
           </div>
@@ -470,11 +470,11 @@ export default function SwapPage(){
         }
         { // mounted=false 或 wagmi 尚未确定连接状态，显示占位
           !mounted || !walletReady ? (
-            <div className="w-full py-3 mt-6 rounded-lg bg-gray-200 dark:bg-gray-700 animate-pulse h-12" />
+            <div className="w-full py-3 mt-6 rounded-lg bg-muted animate-pulse h-12" />
           ) : !isConnected ? (
             <CustomConnectBtn></CustomConnectBtn>
           ) : isMockMode ? (
-            <button className="bg-blue-100 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 hover:text-blue-600 hover:bg-blue-200 cursor-pointer">
+            <button className="btn-action w-full py-2 text-lg tracking-tight rounded-lg mt-6">
               Swap (Mock Mode - Contract Not Deployed)
             </button>
           ) : (
@@ -497,7 +497,7 @@ export default function SwapPage(){
                   isSwapConfirming || isSwapping
                 }
                 onClick={ handleSwap }
-                className="bg-[var(--custom-btn-1)] border-blue-500 text-blue-500 w-full py-3 text-xl tracking-tight rounded-lg mt-6 cursor-pointer disabled:bg-gray-200 dark:disabled:bg-gray-700 disabled:text-white"
+                className="btn-action w-full py-2 text-lg tracking-tight rounded-lg mt-6"
               >
                 { isSwapping || isSwapConfirming ? 'Swaping...':t('title') }
               </button>
@@ -509,13 +509,13 @@ export default function SwapPage(){
 
         {/* Success Message */}
         {isSwapSuccess && (
-          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-green-800 font-semibold">Swap Successful!</p>
+          <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+            <p className="text-green-800 dark:text-green-300 font-semibold">Swap Successful!</p>
             <a
               href={`https://sepolia.etherscan.io/tx/${swapHash}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-blue-600 hover:underline"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
             >
               View on Etherscan →
             </a>
