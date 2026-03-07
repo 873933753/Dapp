@@ -15,9 +15,11 @@ const chainsConfig = USE_CUSTOM_RPC ? {
 }:mainnet
 
 const transports = USE_CUSTOM_RPC ? {
-  [sepolia.id]:http(rpc_sepolia)
+  [sepolia.id]:http(rpc_sepolia),
+  [mainnet.id]:http(rpc_mainnet)
 }:{
-  [sepolia.id]: http(rpc_mainnet)
+  [sepolia.id]: http(rpc_mainnet),
+  [mainnet.id]: http(rpc_mainnet)
 }
 
 // 3、walletConnect二维码连接 - 注册reown

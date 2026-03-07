@@ -50,7 +50,7 @@ if (projectId && projectId.length === 32) {
       }
     })
     
-    connectors.push(wcConnector)
+    connectors.push(wcConnector as any)
     // console.log('✅ 超简化 WalletConnect 已添加')
     // console.log('💡 如果仍有问题，请尝试：')
     // console.log('1. 使用 Trust Wallet 而不是 MetaMask')

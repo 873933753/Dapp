@@ -42,14 +42,12 @@ export default function PoolPage(){
         abi: ERC20_ABI,
         functionName: 'balanceOf',
         args: address ? [address] :undefined,
-        enabled: Boolean(address)
       },
       {
         address: getTokenAddress(chainId,'TKB'), // 合约 TKB 地址
         abi: ERC20_ABI,
         functionName: 'balanceOf',
         args: address ? [address] :undefined,
-        enabled: Boolean(address)
       },
     ],
   })

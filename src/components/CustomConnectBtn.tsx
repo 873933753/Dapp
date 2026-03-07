@@ -11,11 +11,11 @@ export default function CustomConnectBtn({type='Swap'}) {
         chain,          // 当前链信息
         openAccountModal, // 打开账户弹窗的方法
         openConnectModal, // 打开连接弹窗的方法
-        authenticated,   // 是否已认证（连接钱包）
+        authenticationStatus,   // 认证状态
         mounted,         // 组件是否挂载完成
       }) => {
         // 组件挂载完成前的加载状态
-        const ready = mounted && authenticated;
+        const ready = mounted && authenticationStatus !== 'loading';
         const isConnected = ready && account && chain;
         return (
           <button

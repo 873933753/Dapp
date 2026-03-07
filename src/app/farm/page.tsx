@@ -15,7 +15,7 @@ import { useAccount, useBlockNumber, useChainId, useReadContract, useWaitForTran
   然后这个合约会每天给你发放额外的代币作为奖励。
 */
 
-function FarmPoolCard({pool,userAddress,farmAddress}){
+function FarmPoolCard({pool,userAddress,farmAddress}: {pool: any, userAddress: `0x${string}` | undefined, farmAddress: `0x${string}` | undefined}){
   const [ amount, setAmount ] = useState('')
   const [ activeTab, setActiveTab ] = useState('deposit') // deposit or withdraw
 
@@ -25,7 +25,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
     abi: FARM_ABI,
     functionName:'userInfo',
     args: userAddress && pool.id !== undefined ? [BigInt(pool.id), userAddress] : undefined,
-    enabled: Boolean(farmAddress && userAddress && pool.id !== undefined )
+    query: { enabled: Boolean(farmAddress && userAddress && pool.id !== undefined ) }
   }) 
   //获取LpToken
   const { data:lpBalance, refetch: lpBalanceRefetch } = useReadContract({
@@ -33,7 +33,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
     abi: ERC20_ABI,
     functionName:'balanceOf',
     args: userAddress ? [userAddress] : undefined,
-    enabled: Boolean(pool.lpTokenAddress && userAddress)
+    query: { enabled: Boolean(pool.lpTokenAddress && userAddress) }
   })
   // 获取pending rewards
   const { data: pendingReward,refetch: pendingRewardRefetch } = useReadContract({
@@ -41,7 +41,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
     abi: FARM_ABI,
     functionName: 'pendingReward',
     args: userAddress && pool.id !== undefined ? [BigInt(pool.id), userAddress] : undefined,
-    enabled: Boolean(farmAddress && userAddress && pool.id !== undefined)
+    query: { enabled: Boolean(farmAddress && userAddress && pool.id !== undefined) }
   })
 
   const userPendingReward = pendingReward ? formatUnits(pendingReward, 18, 6) : '0'
@@ -60,7 +60,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
       abi: FARM_ABI,
       functionName: 'harvest',
       args: [BigInt(pool.id)]
-    })
+    } as any)
   }
 
   // 方案 A: 监听区块
@@ -93,7 +93,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
       abi: FARM_ABI,
       functionName: 'deposit',
       args: [BigInt(pool.id), amountWei]
-    })
+    } as any)
   }
   //成功刷新Lp和staked
   // useEffect(() => {
@@ -122,7 +122,7 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
       abi: FARM_ABI,
       functionName: 'withdraw',
       args: [BigInt(pool.id), amountWei]
-    })
+    } as any)
   }
     //成功刷新Lp和staked
   useEffect(() => {
@@ -258,8 +258,9 @@ function FarmPoolCard({pool,userAddress,farmAddress}){
               <ApproveButton
                 tokenAddress={pool.lpTokenAddress}
                 spenderAddress = {farmAddress}
-                amountIn={ amount? parseUnits(amount,18) : 0n }
+                amountIn={ amount || '0' }
                 disabled={!amount}
+                onApproved={() => {}}
               >
                 <button
                   onClick={handleDeposit}
@@ -347,11 +348,11 @@ export default function FarmPage(){
 
   // 加载中显示加载模块
   if(isLoading){
-    return <LoadingModel error={error} />
+    return <LoadingModel />
   }
   // 请求报错显示错误模块
   if(error){
-    return <ErrorModel />
+    return <ErrorModel error={error} />
   }
 
   return(
@@ -401,7 +402,7 @@ export default function FarmPage(){
 }
 
 //overall
-function OverallAStats({farmData = {}}){
+function OverallAStats({farmData = {}}: {farmData?: any}){
   return(
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
       <div className="bg-blue-100 dark:bg-card rounded-lg shadow-lg p-6 text-muted-foreground">

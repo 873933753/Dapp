@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl"
 import { useEffect, useMemo, useState } from "react"
 import { useReadContract, useWaitForTransactionReceipt, useWriteContract } from "wagmi"
 
-export default function RemoveForm({isConnected,swapAddress,address,updatePool}){
+export default function RemoveForm({isConnected,swapAddress,address,updatePool,chainId}: any){
   const t = useTranslations('Pool.remove')
   const [lpAmount,setLpAmount] = useState('')
 
@@ -15,7 +15,7 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
     address: swapAddress,
     abi: SWAP_ABI,
     functionName: 'getReserves',
-    enabled: Boolean(swapAddress)
+    query: { enabled: Boolean(swapAddress) }
   })
 
   /* 获取Lptoken余额 */
@@ -24,7 +24,7 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
     abi: SWAP_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    enabled: Boolean(swapAddress && address)
+    query: { enabled: Boolean(swapAddress && address) }
   })
 
   //根据LptokenAmount计算得到TKA B的数量
@@ -78,7 +78,7 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
       abi: SWAP_ABI,
       functionName: 'removeLiquidity',
       args: [lpAmountBig]
-    })
+    } as any)
   }
 
   const handleMaxLP = () => {
@@ -89,7 +89,7 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
 
   useEffect(() => {
     if(isRemoveSuccess){
-      setLpAmount(0)
+      setLpAmount('')
       updatePool?.()
       lpBalanceRefetch()
     }

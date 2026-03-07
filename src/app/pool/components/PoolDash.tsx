@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useImperativeHandle, useState } from "react"
-import { formatUnits } from "viem"
+import { formatUnits } from "@/lib/utils"
 import { SWAP_ABI } from "@/lib/abis"
 import { useReadContract } from "wagmi"
 
@@ -23,10 +23,10 @@ export default function PoolDash({chainId,swapAddress,refreshTrigger}){
     address: swapAddress,
     abi: SWAP_ABI,
     functionName: 'getReserves',
-    enabled: Boolean(swapAddress),
     query: {
+      enabled: Boolean(swapAddress),
       // 添加 queryKey 让 React Query 管理缓存
-      queryKey: ['reserves', swapAddress, chainId],
+      // queryKey: ['reserves', swapAddress, chainId],
     }
   })
 
