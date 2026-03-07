@@ -117,6 +117,8 @@
  "Ipfs":{
   "title":"IPFS Storage",
   "subtitle":"Upload files to IPFS and manage your pins",
+  "connectWallet":"Connect Wallet",
+  "connectWalletHint":"Please connect your wallet to upload and manage files",
   "provider":"Storage Provider",
   "ipfsNode":"IPFS Node",
   "upload":"Upload File",

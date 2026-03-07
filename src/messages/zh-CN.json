@@ -116,6 +116,8 @@
  "Ipfs":{
   "title":"IPFS 存储",
   "subtitle":"上传文件到 IPFS 并管理你的 Pin",
+  "connectWallet":"连接钱包",
+  "connectWalletHint":"请先连接钱包才能上传和管理文件",
   "provider":"存储服务商",
   "ipfsNode":"IPFS 节点",
   "upload":"上传文件",
