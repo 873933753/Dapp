@@ -65,8 +65,8 @@ export default function PoolPage(){
     <div className="container max-w-2xl mx-auto py-6 px-4">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold mb-2 dark:text-white">{t('Liquidity Pool')}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{t('intro')}</p>
+        <h1 className="text-3xl font-bold mb-2">{t('Liquidity Pool')}</h1>
+        <p className="text-muted-foreground">{t('intro')}</p>
       </div>
 
       {/* Pool Stats */}
@@ -77,7 +77,7 @@ export default function PoolPage(){
       />
 
       {/* Main Card */}
-      <div className="bg-card dark:bg-gray-800 rounded-2xl shadow-lg p-6 dark:border dark:border-gray-700">
+      <div className="bg-card rounded-2xl shadow-lg p-6 dark:border dark:border-border">
         {/* Mode Selector */}
         <div className="flex gap-2 mb-6">
           <button
@@ -85,7 +85,7 @@ export default function PoolPage(){
             className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors cursor-pointer ${
               mode === 'add'
                 ? 'bg-blue-100 dark:bg-blue-600 text-blue-500 dark:text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                : 'bg-secondary text-muted-foreground hover:bg-accent'
             }`}
           >
             {t('Add Liquidity')}
@@ -95,7 +95,7 @@ export default function PoolPage(){
             className={`flex-1 py-2 px-4 rounded-lg font-semibold transition-colors cursor-pointer ${
               mode === 'remove'
                 ? 'bg-blue-100 dark:bg-blue-600 text-blue-500 dark:text-white'
-                : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                : 'bg-secondary text-muted-foreground hover:bg-accent'
             }`}
           >
             {t('Remove Liquidity')}
@@ -137,9 +137,9 @@ export default function PoolPage(){
 function InfoSection(){
   const t = useTranslations('Pool.info')
   return(
-    <div className="mt-6 p-4 bg-card dark:bg-gray-800 rounded-lg dark:border dark:border-gray-700">
-      <h3 className="font-semibold mb-2 text-gray-800 dark:text-gray-100">{t('title')}</h3>
-      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
+    <div className="mt-6 p-4 bg-card rounded-lg dark:border dark:border-border">
+      <h3 className="font-semibold mb-2">{t('title')}</h3>
+      <ul className="text-sm text-muted-foreground space-y-1">
         <li>• {t('first')}</li>
         <li>• {t('second')}</li>
         <li>• {t('third')}</li>

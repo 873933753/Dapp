@@ -21,7 +21,7 @@ export default function ThemeSwitcher() {
   return (
     <button
       onClick={toggleTheme}
-      className="p-2 rounded-md transition-colors duration-200 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+      className="p-2 rounded-md transition-colors duration-200 bg-secondary text-foreground"
       aria-label="Toggle theme"
     >
       {theme === 'dark' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}

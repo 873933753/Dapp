@@ -35,6 +35,12 @@ export const featureList = [
     description:'View your stats and activities',
     href:'/dashboard',
     icon:'📊'
+  },
+  {
+    name:'IPFS',
+    description:'Upload and retrieve files on IPFS',
+    href:'/ipfs',
+    icon:'📦'
   }
   // {
   //   name:'API Health',

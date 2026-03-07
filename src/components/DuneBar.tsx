@@ -133,7 +133,7 @@ export default function DuneBar({ height = 500 }){
 
   return (
     <div className="bg-card p-4 rounded-md border border-border dark:border-0 h-[500px] flex flex-col">
-      {loading && <div className="flex-1 flex items-center justify-center"><div className="w-6 h-6 border-4 border-gray-300 border-t-transparent rounded-full animate-spin"/></div>}
+      {loading && <div className="flex-1 flex items-center justify-center"><div className="w-6 h-6 border-4 border-muted-foreground/30 border-t-transparent rounded-full animate-spin"/></div>}
       {error && <div className="flex-1 flex items-center justify-center text-sm text-red-600">{error}</div>}
       {!loading && !error && (
         <>
@@ -145,7 +145,7 @@ export default function DuneBar({ height = 500 }){
           <div className="hidden md:block min-w-[80px] max-w-[220px] dune-scroll overflow-y-auto" style={{maxHeight: height-50}}>
             {pieDataState.map((d,i) => (
               <div key={d.name} className="flex items-center text-sm py-1">
-                <div className="flex-1 text-right truncate pr-0 text-gray-400">{d.name}</div>
+                <div className="flex-1 text-right truncate pr-0 text-muted-foreground">{d.name}</div>
                 <div className="w-3 h-3 rounded-xs ml-2" style={{background: palette[i % palette.length]}} />
               </div>
             ))}

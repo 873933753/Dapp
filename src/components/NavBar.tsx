@@ -17,6 +17,7 @@ export default function NavBar(){
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSmallScreen, setIsSmallScreen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const visibleNavItems = navlist.filter(navItem => !navItem.disNav)
 
   // WalletConnect 专用连接
@@ -58,6 +59,10 @@ export default function NavBar(){
   useEffect(() => {
     setIsMenuOpen(false)
   }, [pathname])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     // matchMedia to detect small screens and hide balance on mobile
@@ -139,10 +144,10 @@ export default function NavBar(){
           <LocaleSwitcher />
           <ThemeSwitcher />
           {/* WalletConnect 二维码扫码按钮 - 仅在未连接时显示 */}
-          {!isConnected && (
+          {mounted && !isConnected && (
             <button 
               onClick={handleWalletConnectClick}
-              className="p-2 rounded-md transition-colors duration-200 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+              className="p-2 rounded-md transition-colors duration-200 bg-blue-100 dark:bg-blue-600 text-blue-500 dark:text-white hover:bg-blue-200 dark:hover:bg-blue-700"
               title="WalletConnect 扫码连接"
             >
               <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -151,7 +156,8 @@ export default function NavBar(){
             </button>
           )}
           {/* Wallet button: wrap and scale down on small screens to avoid covering menu */}
-          <div className="min-w-0 md:min-w-auto md:transform-none transform scale-90 md:scale-100 md:ml-0 ml-2">
+          {mounted && (
+          <div className="rk-nav-btn min-w-0 md:min-w-auto md:transform-none transform scale-90 md:scale-100 md:ml-0 ml-2">
             <ConnectButton
               label={t('button')}
               showBalance={!isSmallScreen}
@@ -161,6 +167,7 @@ export default function NavBar(){
               }}
             />
           </div>
+          )}
         </div>
         <div className={mobileMenuWrapper}>
           <div className="flex flex-col px-4 py-3 space-y-1">

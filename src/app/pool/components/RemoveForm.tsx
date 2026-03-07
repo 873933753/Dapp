@@ -98,9 +98,9 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
     <>
       {/* LP Token Input */}
       <div className="mb-4">
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
+        <div className="bg-muted rounded-xl p-4">
           <div className="flex justify-between mb-2">
-            <label className="text-sm text-gray-600 dark:text-gray-300">LP Tokens</label>
+            <label className="text-sm text-muted-foreground">LP Tokens</label>
             <button
               onClick={handleMaxLP}
               className="text-sm text-blue-600 dark:text-blue-400"
@@ -116,7 +116,7 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
               placeholder="0.0"
               className="flex-1 min-w-0 text-2xl font-semibold bg-transparent outline-none"
             />
-            <div className="flex-shrink-0 bg-white dark:bg-gray-600 border dark:border-gray-500 rounded-lg px-3 py-2 font-semibold dark:text-white">
+            <div className="flex-shrink-0 bg-background border border-border rounded-lg px-3 py-2 font-semibold">
               LP
             </div>
           </div>
@@ -125,7 +125,7 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
 
       {/* Arrow Down */}
       <div className="flex justify-center -mt-2 mb-2 relative z-10">
-        <div className="bg-white dark:bg-gray-800 border-4 border-gray-50 dark:border-gray-600 rounded-xl p-2">
+        <div className="bg-card border-4 border-border rounded-xl p-2">
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
@@ -134,12 +134,12 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
 
       {/* Output Amounts */}
       <div className="mb-6 space-y-3">
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-300 mb-1">{t('You will receive')}</div>
+        <div className="bg-muted rounded-xl p-4">
+          <div className="text-sm text-muted-foreground mb-1">{t('You will receive')}</div>
           <div className="text-xl font-semibold">{calculateRemoveAmounts?.amountA} TKA</div>
         </div>
-        <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-4">
-          <div className="text-sm text-gray-600 dark:text-gray-300 mb-1">{t('You will receive')}</div>
+        <div className="bg-muted rounded-xl p-4">
+          <div className="text-sm text-muted-foreground mb-1">{t('You will receive')}</div>
           <div className="text-xl font-semibold">{calculateRemoveAmounts?.amountB} TKB</div>
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function RemoveForm({isConnected,swapAddress,address,updatePool})
             onClick={handleRemoveLiquidity}
             disabled={!lpAmount || isRemoving || isRemoveConfirming}
 
-            className="w-full bg-red-200/50 dark:bg-red-600/20 hover:bg-red-300/50 dark:hover:bg-red-700/50 hover:text-white disabled:bg-gray-400 dark:disabled:bg-gray-600 dark:text-white disabled:text-white text-red-400 font-semibold py-3 px-6 rounded-lg transition-colors"
+            className="btn-danger w-full font-semibold py-2 px-6 rounded-lg transition-colors"
           >
             {isRemoving || isRemoveConfirming ? t('Removing Liquidity') : t('Remove Liquidity')}
           </button>

@@ -85,6 +85,22 @@
   /* custom colors */
   --custom-primary: rgb(43 127 255);
   --custom-btn-1: rgb(219 234 254);
+  /* Action button tokens — change here to re-skin all blue CTA buttons */
+  --btn-action-bg: rgb(219 234 254);       /* blue-100 */
+  --btn-action-text: rgb(59 130 246);      /* blue-500 */
+  --btn-action-hover-bg: rgb(191 219 254); /* blue-200 */
+  /* Solid blue action button tokens — Bridge Transfer etc. */
+  --btn-action-solid-bg: rgb(37 99 235);        /* blue-600 */
+  --btn-action-solid-text: rgb(255 255 255);    /* white */
+  --btn-action-solid-hover-bg: rgb(29 78 216);  /* blue-700 */
+  /* Danger button tokens — Withdraw / Remove */
+  --btn-danger-bg: rgb(252 165 165);       /* red-300 */
+  --btn-danger-text: rgb(255 255 255);     /* white */
+  --btn-danger-hover-bg: rgb(239 68 68);   /* red-500 */
+  /* Warning button tokens — Harvest */
+  --btn-warning-bg: rgb(251 146 60);       /* orange-400 */
+  --btn-warning-text: rgb(255 255 255);    /* white */
+  --btn-warning-hover-bg: rgb(249 115 22); /* orange-500 */
 }
 
 .dark {
@@ -123,6 +139,22 @@
   --custom-primary: rgb(81 162 255);
   /* --custom-btn-1: rgb(0 0 0); */
   --custom-btn-1: rgb(219 234 254);
+  /* Action button tokens (dark) */
+  --btn-action-bg: rgb(37 99 235);         /* blue-600 */
+  --btn-action-text: rgb(255 255 255);     /* white */
+  --btn-action-hover-bg: rgb(29 78 216);   /* blue-700 */
+  /* Solid blue action button tokens (dark) */
+  --btn-action-solid-bg: rgb(37 99 235);        /* blue-600 */
+  --btn-action-solid-text: rgb(255 255 255);    /* white */
+  --btn-action-solid-hover-bg: rgb(29 78 216);  /* blue-700 */
+  /* Danger button tokens (dark) */
+  --btn-danger-bg: rgb(220 38 38);         /* red-600 */
+  --btn-danger-text: rgb(255 255 255);     /* white */
+  --btn-danger-hover-bg: rgb(185 28 28);   /* red-700 */
+  /* Warning button tokens (dark) */
+  --btn-warning-bg: rgb(249 115 22);       /* orange-500 */
+  --btn-warning-text: rgb(255 255 255);    /* white */
+  --btn-warning-hover-bg: rgb(234 88 12);  /* orange-600 */
 }
 
 @layer base {
@@ -132,6 +164,74 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Blue action button utility — re-skin by editing --btn-action-* variables above */
+.btn-action {
+  background-color: var(--btn-action-bg);
+  color: var(--btn-action-text);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.btn-action:hover:not(:disabled) {
+  background-color: var(--btn-action-hover-bg);
+}
+.btn-action:disabled {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Solid blue action button utility — Bridge Transfer etc. */
+.btn-action-solid {
+  background-color: var(--btn-action-solid-bg);
+  color: var(--btn-action-solid-text);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.btn-action-solid:hover:not(:disabled) {
+  background-color: var(--btn-action-solid-hover-bg);
+}
+.btn-action-solid:disabled {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Red danger button utility — Withdraw / Remove */
+.btn-danger {
+  background-color: var(--btn-danger-bg);
+  color: var(--btn-danger-text);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.btn-danger:hover:not(:disabled) {
+  background-color: var(--btn-danger-hover-bg);
+}
+.btn-danger:disabled {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Orange warning button utility — Harvest */
+.btn-warning {
+  background-color: var(--btn-warning-bg);
+  color: var(--btn-warning-text);
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.btn-warning:hover:not(:disabled) {
+  background-color: var(--btn-warning-hover-bg);
+}
+.btn-warning:disabled {
+  background-color: var(--muted);
+  color: var(--muted-foreground);
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 /* remove spinner arrows from number inputs */
@@ -173,4 +273,14 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .dune-scroll:hover {
   scrollbar-color: var(--custom-primary) var(--card);
+}
+
+/* NavBar: align RainbowKit ConnectButton height with custom icon buttons (36px) */
+.rk-nav-btn button {
+  height: 36px !important;
+  min-height: 36px !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 0.875rem !important;
+  border-radius: 0.375rem !important;
 }
