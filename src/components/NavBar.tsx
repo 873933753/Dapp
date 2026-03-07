@@ -18,7 +18,7 @@ export default function NavBar(){
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSmallScreen, setIsSmallScreen] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const visibleNavItems = navlist.filter(navItem => !navItem.disNav)
+  const visibleNavItems = navlist.filter((navItem: any) => !navItem.disNav)
 
   // WalletConnect 专用连接
   const { connect, connectors } = useConnect()

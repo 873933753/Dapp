@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-export default function DuneChart({ queryId, maxRows = 100 }){
+export default function DuneChart({ queryId, maxRows = 100 }: { queryId?: any; maxRows?: number }){
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)

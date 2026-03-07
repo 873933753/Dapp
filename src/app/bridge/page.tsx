@@ -26,9 +26,9 @@ const SUPPORTED_CHAINS = [
 ]
 
 const SUPPORTED_TOKENS = [
-  { symbol: 'TKA', name: 'Token A', address: process.env.NEXT_PUBLIC_TOKEN_A_ADDRESS },
-  { symbol: 'TKB', name: 'Token B', address: process.env.NEXT_PUBLIC_TOKEN_B_ADDRESS },
-  { symbol: 'DRT', name: 'Reward Token', address: process.env.NEXT_PUBLIC_REWARD_TOKEN_ADDRESS }
+  { symbol: 'TKA', name: 'Token A', address: process.env.NEXT_PUBLIC_TOKEN_A_ADDRESS as `0x${string}` },
+  { symbol: 'TKB', name: 'Token B', address: process.env.NEXT_PUBLIC_TOKEN_B_ADDRESS as `0x${string}` },
+  { symbol: 'DRT', name: 'Reward Token', address: process.env.NEXT_PUBLIC_REWARD_TOKEN_ADDRESS as `0x${string}` }
 ]
 
 export default function BrigePage(){
@@ -56,7 +56,7 @@ export default function BrigePage(){
     abi: ERC20_ABI,
     functionName: 'balanceOf',
     args: address ? [address] : undefined,
-    enabled: Boolean(address && tokenData?.address)
+    query: { enabled: Boolean(address && tokenData?.address) }
   })
 
   const userBalance = balance ? formatUnits(balance, 18, 6) : '0'
@@ -312,7 +312,7 @@ export default function BrigePage(){
 }
 
 // 转账记录组件
-function TransferRecord({transfer,onStatusUpdate}){
+function TransferRecord({transfer,onStatusUpdate}: {transfer: any, onStatusUpdate?: any}){
   const [progress, setProgress] = useState(0)
   const [currentStatus, setCurrentStatus] = useState(transfer.status)
 

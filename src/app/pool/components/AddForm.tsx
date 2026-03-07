@@ -156,14 +156,12 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
         abi: ERC20_ABI,
         functionName: 'allowance',
         args: address && swapAddress ? [ address, swapAddress ] : undefined, // 参数：授权人地址、被授权合约地址
-        enabled: Boolean(address && swapAddress && tokenAddressA && amountA)
       },
       {
         address: tokenAddressB, // 代币TKB合约地址
         abi: ERC20_ABI,
         functionName: 'allowance',
         args: address && swapAddress ? [ address, swapAddress ] : undefined, // 参数：授权人地址、被授权合约地址
-        enabled: Boolean(address && swapAddress && tokenAddressB && amountB)
       }
     ]
   })
@@ -220,7 +218,7 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
           swapAddress,                  // 池子合约地址（要授权的对象）
           tokenAWei                         // 授权金额
         ],
-      })
+      } as any)
     }
 
     // 授权 BNB
@@ -236,7 +234,7 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
         abi: ERC20_ABI,
         functionName: 'approve',
         args: [swapAddress, tokenBWei],
-      })
+      } as any)
     }
 
     // 两个都授权完成后，再添加流动性
@@ -299,7 +297,7 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
       abi:SWAP_ABI,
       functionName:'addLiquidity',
       args: [amountAWei,amountBWei]
-    })
+    } as any)
   }
 
   //监听添加成功刷新pool
@@ -307,8 +305,8 @@ export default function AddForm({chainId,isConnected,balanceData,swapAddress,add
     if(isAddSuccess){
       console.log('添加成功回调函数')
       // 状态重置
-      setAmountA(0)
-      setAmountB(0)
+      setAmountA('')
+      setAmountB('')
       updatePool?.()
     }
   },[isAddSuccess])

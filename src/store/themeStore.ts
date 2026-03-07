@@ -2,7 +2,13 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 // simple theme store persisted in localStorage
-export const useThemeStore = create(
+interface ThemeState {
+  theme: string;
+  setTheme: (theme: string) => void;
+  toggleTheme: () => void;
+}
+
+export const useThemeStore = create<ThemeState>()(
   persist(
     (set) => ({
       theme: 'dark',
@@ -11,7 +17,6 @@ export const useThemeStore = create(
     }),
     {
       name: 'theme-storage',
-      getStorage: () => localStorage,
     }
   )
 )

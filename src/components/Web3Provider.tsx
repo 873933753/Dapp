@@ -108,7 +108,7 @@ export default function Web3Provider({children}){
           // modalSize="compact"
           theme={theme}
           initialChain={sepolia}
-          locale={locale}
+          locale={locale as any}
          >
           {rpcError && (
             <div className="fixed top-16 left-0 right-0 z-40 flex items-center justify-between gap-2 border-b border-red-500/40 bg-red-500/10 px-4 py-2 text-xs text-red-500 backdrop-blur-sm">
